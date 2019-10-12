@@ -34,23 +34,29 @@ last_separator :- write('  '), llc, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv
 
 % display_middle_line([' ', '.', '.', '.', '.', '.', '.', ' ']).
 
-display_middle_line(Line) :-
+general_line_display([]).
+general_line_display([H | []]):-
+	display_last_line(H).
+general_line_display([H | T]) :-
 	middle_separator,
-	vdiv, display_line(Line), nl.
+	vdiv, display_line(H), nl,
+	general_line_display(T).
 
-display_second_line(Line) :-
+display_second_line([H | T]) :-
 	second_separator,
-	vdiv, display_line(Line), nl.
+	vdiv, display_line(H), nl,
+	general_line_display(T).
 
 % TODO: fazer depois display_line diferente para a primeira e ultima line para poder ser array quadrado
-display_first_line(Line) :-
+display_first_line([H | T]) :-
 	write('  '), first_separator,
-	write('  '), vdiv, display_line(Line), nl.
+	write(' '), display_line(H), nl,
+	display_second_line(T).
 
 % TODO: fazer depois display_line diferente para a primeira e ultima line para poder ser array quadrado
 display_last_line(Line) :-
 	penultimate_separator,
-	write('  '), vdiv, display_line(Line), nl,
+	write(' '), display_line(Line), nl,
 	last_separator.
 
 display_board([], _).
@@ -58,8 +64,10 @@ display_board([Line | Rest], Player) :-
 	display_line(Line), nl, 
 	display_board(Rest, Player).
 
-display_line([Element | []]) :- 
-	Element.
+display_line([]).
+display_line([Element | []]):-
+	Element = null,
+	null.
 display_line([Element | Rest]) :- 
 	Element, vdiv,
 	display_line(Rest).
@@ -79,8 +87,8 @@ empty_board([
 cute_display :- 
 	clear,
 	empty_board(X),
-	write('  0 1 2 3 4 5'),nl,
-	display_board(X, 'Meias').
+	write('   0 1 2 3 4 5'),nl,
+	display_first_line(X).
 
 
 
