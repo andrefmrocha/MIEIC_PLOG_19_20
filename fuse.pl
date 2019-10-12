@@ -1,31 +1,26 @@
 % display() :- display_board(board1, 'Ola').
-
-% display_board( [
-%     [' ', [], [], [], [], [], [], ' '], %1
-%     [[], '.', '.', '.', '.', '.', '.', []], %2
-%     [[], '.', '.', '.', '.', '.', '.', []], %3
-%     [[], '.', '.', '.', '.', '.', '.', []], %4
-%     [[], '.', '.', '.', '.', '.', '.', []], %5
-%     [[], '.', '.', '.', '.', '.', '.', []], %6
-%     [[], '.', '.', '.', '.', '.', '.', []], %7
-%     [' ', [], [], [], [], [], [], ' ']  %8
-% ], 'Ola').
+use_module(library(ansi_term)).
 
 clear :- write('\e[2J').
 
-ulc :- put_code(9556). % ╔
-urc :- put_code(9559). % ╗
-llc :- put_code(9562). % ╚
-lrc :- put_code(9565). % ╝
+ulc :- ansi_format([fg(cyan)], '~c', [9556]). % ╔
+urc :- ansi_format([fg(cyan)], '~c', [9559]). % ╗
+llc :- ansi_format([fg(cyan)], '~c', [9562]). % ╚
+lrc :- ansi_format([fg(cyan)], '~c', [9565]). % ╝
 
-hdiv :- put_code(9552). % ═
-vdiv :- put_code(9553). % ║
-mdiv :- put_code(9580). % ╬
+hdiv :- ansi_format([fg(cyan)], '~c', [9552]). % ═
+vdiv :- ansi_format([fg(cyan)], '~c', [9553]). % ║
+mdiv :- ansi_format([fg(cyan)], '~c', [9580]). % ╬
 
-tr :- put_code(9568). % ╠
-tl :- put_code(9571). % ╣
-td :- put_code(9574). % ╦
-tu :- put_code(9577). % ╩
+tr :- ansi_format([fg(cyan)], '~c', [9568]). % ╠
+tl :- ansi_format([fg(cyan)], '~c', [9571]). % ╣
+td :- ansi_format([fg(cyan)], '~c', [9574]). % ╦
+tu :- ansi_format([fg(cyan)], '~c', [9577]). % ╩
+
+wt:- ansi_format([bold, fg(white)], '~c', [9679]).
+bl:- ansi_format([bold, fg(black)], '~c', [9679]).
+null:- ansi_format([bold, fg(red)], '~c', [9618]).
+empty:- ansi_format([bold, bg(cyan)], '~s', [' ']).
 
 middle_separator :- tr, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, tl, nl.
 
@@ -63,16 +58,29 @@ display_board([Line | Rest], Player) :-
 	display_line(Line), nl, 
 	display_board(Rest, Player).
 
-display_line([]).
+display_line([Element | []]) :- 
+	Element.
 display_line([Element | Rest]) :- 
-	write(Element), vdiv,
+	Element, vdiv,
 	display_line(Rest).
 
-% pq n sei passar argumentos
-cuteDisplay :- 
-	clear,
+empty_board([
+    [null, wt, bl, wt, bl, bl, wt, null], %1
+    [wt, empty, empty, empty, empty, empty, empty, wt], %2
+    [bl, empty, empty, empty, empty, empty, empty, bl], %3
+    [wt, empty, empty, empty, empty, empty, empty, wt], %4
+    [wt, empty, empty, empty, empty, empty, empty, bl], %5
+    [bl, empty, empty, empty, empty, empty, empty, bl], %6
+    [wt, empty, empty, empty, empty, empty, empty, wt], %7
+    [null, bl, wt, wt, bl, wt, wt, null]  %8
+]).
 
-	write('Ola\n').
+% pq n sei passar argumentos
+cute_display :- 
+	clear,
+	empty_board(X),
+	write('  0 1 2 3 4 5'),nl,
+	display_board(X, 'Meias').
 
 
 
