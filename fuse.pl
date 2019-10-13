@@ -19,44 +19,46 @@ tu :- ansi_format([fg(cyan)], '~c', [9577]). % ╩
 
 wt:- ansi_format([bold, fg(white)], '~c', [9679]).
 bl:- ansi_format([bold, fg(black)], '~c', [9679]).
-null:- ansi_format([bold, fg(red)], '~c', [9618]).
+% null:- ansi_format([bold, fg(red)], '~c', [9618]).
+null:- write(' ').
 empty:- ansi_format([bold, bg(cyan)], '~s', [' ']).
 
-middle_separator :- tr, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, tl, nl.
+middle_separator :- write(' '), tr, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, tl, nl.
 
-second_separator :- ulc, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, urc, nl.
+second_separator :- write(' '), ulc, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, urc, nl.
 
-penultimate_separator :- llc, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, lrc, nl.
+penultimate_separator :- write(' '), llc, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, lrc, nl.
 
-first_separator :- ulc, hdiv, td, hdiv, td, hdiv, td, hdiv, td, hdiv, td, hdiv, urc, nl.
+first_separator :- write(' '), ulc, hdiv, td, hdiv, td, hdiv, td, hdiv, td, hdiv, td, hdiv, urc, nl.
 
-last_separator :- write('  '), llc, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, lrc, nl.
+last_separator :- write(' '), write('  '), llc, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, lrc, nl.
 
 % display_middle_line([' ', '.', '.', '.', '.', '.', '.', ' ']).
 
-general_line_display([]).
-general_line_display([H | []]):-
+general_line_display([],_).
+general_line_display([H | []], _):-
 	display_last_line(H).
-general_line_display([H | T]) :-
+general_line_display([H | T], N) :-
 	middle_separator,
-	vdiv, display_line(H), nl,
-	general_line_display(T).
+	write(N), vdiv, display_line(H), nl,
+	N1 is N + 1,
+	general_line_display(T, N1).
 
 display_second_line([H | T]) :-
 	second_separator,
-	vdiv, display_line(H), nl,
-	general_line_display(T).
+	write('0'), vdiv, display_line(H), nl,
+	general_line_display(T, 1).
 
 % TODO: fazer depois display_line diferente para a primeira e ultima line para poder ser array quadrado
 display_first_line([H | T]) :-
 	write('  '), first_separator,
-	write(' '), display_line(H), nl,
+	write('  '), display_line(H), nl,
 	display_second_line(T).
 
 % TODO: fazer depois display_line diferente para a primeira e ultima line para poder ser array quadrado
 display_last_line(Line) :-
 	penultimate_separator,
-	write(' '), display_line(Line), nl,
+	write('  '), display_line(Line), nl,
 	last_separator.
 
 display_board([], _).
@@ -87,7 +89,7 @@ empty_board([
 cute_display :- 
 	clear,
 	empty_board(X),
-	write('   0 1 2 3 4 5'),nl,
+	write('    A B C D E F'),nl,
 	display_first_line(X).
 
 
