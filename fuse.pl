@@ -86,11 +86,16 @@ empty_board([
 ]).
 
 % pq n sei passar argumentos
+display_game(Board, Player):-
+	write('Player: '),
+	write(Player), nl, nl,
+	write('    A B C D E F'),nl,
+	display_first_line(Board).
+
 cute_display :- 
 	clear,
 	empty_board(X),
-	write('    A B C D E F'),nl,
-	display_first_line(X).
+	display_game(X, 'Meias').
 
 
 
