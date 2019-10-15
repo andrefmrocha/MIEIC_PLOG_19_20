@@ -33,7 +33,6 @@ first_separator :- write(' '), ulc, hdiv, td, hdiv, td, hdiv, td, hdiv, td, hdiv
 
 last_separator :- write(' '), write('  '), llc, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, lrc, nl.
 
-% display_middle_line([' ', '.', '.', '.', '.', '.', '.', ' ']).
 
 general_line_display([],_).
 general_line_display([H | []], N):-
@@ -122,9 +121,8 @@ empty_board([
     [corner, bl, wt, wt, bl, wt, wt, corner]  %8
 ]).
 
-% pq n sei passar argumentos
 display_game(Board, Player):-
-	write('Player: '),
+	write('Player turn: '),
 	write(Player), nl, nl,
 	write('  A B C D E F G H'),nl,
 	display_first_line(Board).
