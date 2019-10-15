@@ -20,6 +20,7 @@ tu :- ansi_format([fg(cyan)], '~c', [9577]). % ╩
 wt:- ansi_format([bold, fg(white)], '~c', [9679]). % Disco branco
 bl:- ansi_format([bold, fg(black)], '~c', [9679]). % Disco preto
 null:- write(' '). % Disco nulo
+corner:- write(' '). % Disco nulo
 empty:- ansi_format([bold, bg(cyan)], '~s', [' ']). % Lugar vazio
 
 middle_separator :- write(' '), tr, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, tl, nl.
@@ -65,58 +66,58 @@ display_board([Line | Rest], Player) :-
 	display_board(Rest, Player).
 
 display_line([]).
-display_line([Element | []]):-
-	Element = null,
+display_line([corner | []]):-
+	corner,
 	null.
 display_line([Element | Rest]) :- 
 	Element, vdiv,
 	display_line(Rest).
 
 final_board([
-    [null, null, null, null, null, wt, null, null], %1
+    [corner, null, null, null, null, wt, null, corner], %1
     [null, empty, empty, bl, bl, bl, empty, null], %2
     [null, empty, wt, empty, wt, wt, bl, null], %3
     [null, bl, bl, bl, bl, bl, wt, null], %4
     [null, empty, empty, empty, wt, bl, wt, null], %5
     [null, bl, wt, empty, wt, wt, wt, null], %6
     [null, empty, empty, empty, bl, wt, empty, null], %7
-    [null, null, null, null, null, null, null, null]  %8
+    [corner, null, null, null, null, null, null, corner]  %8
 ]).
 
 
 
 middle_state_board([
-    [null, null, null, null, null, wt, null, null], %1
+    [corner, null, null, null, null, wt, null, corner], %1
     [null, bl, empty, bl, bl, empty, empty, null], %2
     [null, empty, wt, empty, wt, wt, bl, null], %3
     [null, bl, bl, bl, bl, bl, wt, null], %4
     [null, empty, bl, empty, wt, bl, wt, null], %5
     [null, bl, wt, empty, wt, wt, wt, null], %6
     [null, empty, empty, empty, bl, wt, empty, null], %7
-    [null, null, null, null, null, null, null, null]  %8
+    [corner, null, null, null, null, null, null, corner]  %8
 ]).
 
 second_middle_board([
-    [null, wt, bl, null, bl, bl, empty, null], %1
+    [corner, wt, bl, null, bl, bl, empty, corner], %1
     [wt, empty, empty, bl, empty, empty, empty, wt], %2
     [bl, empty, empty, empty, bl, empty, wt, null], %3
     [wt, empty, empty, empty, empty, empty, empty, wt], %4
     [wt, empty, empty, wt, empty, empty, empty, bl], %5
     [null, empty, empty, empty, bl, empty, empty, bl], %6
     [wt, empty, empty, empty, empty, empty, empty, wt], %7
-    [null, bl, wt, wt, bl, wt, wt, null]  %8
+    [corner, bl, wt, wt, bl, wt, wt, corner]  %8
 ]).
 
 
 empty_board([
-    [null, wt, bl, wt, bl, bl, wt, null], %1
+    [corner, wt, bl, wt, bl, bl, wt, corner], %1
     [wt, empty, empty, empty, empty, empty, empty, wt], %2
     [bl, empty, empty, empty, empty, empty, empty, bl], %3
     [wt, empty, empty, empty, empty, empty, empty, wt], %4
     [wt, empty, empty, empty, empty, empty, empty, bl], %5
     [bl, empty, empty, empty, empty, empty, empty, bl], %6
     [wt, empty, empty, empty, empty, empty, empty, wt], %7
-    [null, bl, wt, wt, bl, wt, wt, null]  %8
+    [corner, bl, wt, wt, bl, wt, wt, corner]  %8
 ]).
 
 display_game(Board, Player):-
