@@ -8,7 +8,7 @@ urc :- ansi_format([fg(cyan)], '~c', [9559]). % ╗
 llc :- ansi_format([fg(cyan)], '~c', [9562]). % ╚
 lrc :- ansi_format([fg(cyan)], '~c', [9565]). % ╝
 
-hdiv :- ansi_format([fg(cyan)], '~c', [9552]). % ═
+hdiv :- ansi_format([fg(cyan)], '~c', [9552]), ansi_format([fg(cyan)], '~c', [9552]). % ═
 vdiv :- ansi_format([fg(cyan)], '~c', [9553]). % ║
 mdiv :- ansi_format([fg(cyan)], '~c', [9580]). % ╬
 
@@ -17,21 +17,21 @@ tl :- ansi_format([fg(cyan)], '~c', [9571]). % ╣
 td :- ansi_format([fg(cyan)], '~c', [9574]). % ╦
 tu :- ansi_format([fg(cyan)], '~c', [9577]). % ╩
 
-wt:- ansi_format([bold, fg(white)], '~c', [9679]). % Disco branco
-bl:- ansi_format([bold, fg(black)], '~c', [9679]). % Disco preto
+wt:- ansi_format([bold, fg(white)], '~c', [11044]), write(' '). % Disco branco
+bl:- ansi_format([bold, fg(black)], '~c', [11044]), write(' '). % Disco preto
 null:- write(' '). % Disco nulo
 corner:- write(' '). % Canto do Tabuleiro
-empty:- ansi_format([bold, bg(cyan)], '~s', [' ']). % Lugar vazio
+empty:- ansi_format([bold, bg(cyan)], '~s', [' ']), ansi_format([bold, bg(cyan)], '~s', [' ']). % Lugar vazio
 
-middle_separator :- write(' '), tr, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, tl, nl.
+middle_separator :- write(' '), tr, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, tl, nl.
 
-second_separator :- write(' '), ulc, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, urc, nl.
+second_separator :- write(' '), ulc, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, urc, nl.
 
-penultimate_separator :- write(' '), llc, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, lrc, nl.
+penultimate_separator :- write(' '), llc, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, lrc, nl.
 
-first_separator :- write(' '), ulc, hdiv, hdiv, hdiv, td, hdiv, hdiv, hdiv, td, hdiv, hdiv, hdiv, td, hdiv, hdiv, hdiv, td, hdiv, hdiv, hdiv, td, hdiv, hdiv, hdiv, urc, nl.
+first_separator :- write(' '), ulc, hdiv, td, hdiv, td, hdiv, td, hdiv, td, hdiv, td, hdiv, urc, nl.
 
-last_separator :- write(' '), write('    '), llc, hdiv, hdiv, hdiv, tu, hdiv, hdiv, hdiv, tu, hdiv, hdiv, hdiv, tu, hdiv, hdiv, hdiv, tu, hdiv, hdiv, hdiv, tu, hdiv, hdiv, hdiv, lrc, nl.
+last_separator :- write(' '), write('   '), llc, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, lrc, nl.
 
 
 general_line_display([],_).
@@ -50,15 +50,15 @@ display_second_line([H | T]) :-
 
 % TODO: fazer depois display_line diferente para a primeira e ultima line para poder ser array quadrado
 display_first_line([H | T]) :-
-	write('    '), first_separator,
-	write('0 '), display_line(H), nl,
+	write('   '), first_separator,
+	write('0  '), display_line(H), nl,
 	display_second_line(T).
 
 % TODO: fazer depois display_line diferente para a primeira e ultima line para poder ser array quadrado
 display_last_line(Line, N) :-
 	penultimate_separator,
     write(N),
-	write(' '), display_line(Line), nl,
+	write('  '), display_line(Line), nl,
 	last_separator.
 
 display_board([], _).
@@ -71,7 +71,7 @@ display_line([corner | []]):-
 	corner,
 	null.
 display_line([Element | Rest]) :- 
-	write(' '), Element, write(' '), vdiv,
+	Element, vdiv,
 	display_line(Rest).
 
 final_board([
@@ -124,7 +124,7 @@ empty_board([
 display_game(Board, Player):-
 	write('Player turn: '),
 	write(Player), nl, nl,
-	write('   A   B   C   D   E   F   G   H'),nl,
+	write('   A  B  C  D  E  F  G  H'),nl,
 	display_first_line(Board).
 
 cute_display :- 
