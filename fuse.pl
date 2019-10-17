@@ -23,15 +23,15 @@ null:- write(' '). % Disco nulo
 corner:- write(' '). % Disco nulo
 empty:- ansi_format([bold, bg(cyan)], '~s', [' ']). % Lugar vazio
 
-middle_separator :- write(' '), tr, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, tl, nl.
+middle_separator :- write(' '), tr, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, tl, nl.
 
-second_separator :- write(' '), ulc, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, urc, nl.
+second_separator :- write(' '), ulc, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, urc, nl.
 
-penultimate_separator :- write(' '), llc, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, lrc, nl.
+penultimate_separator :- write(' '), llc, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, lrc, nl.
 
-first_separator :- write(' '), ulc, hdiv, td, hdiv, td, hdiv, td, hdiv, td, hdiv, td, hdiv, urc, nl.
+first_separator :- write(' '), ulc, hdiv, hdiv, hdiv, td, hdiv, hdiv, hdiv, td, hdiv, hdiv, hdiv, td, hdiv, hdiv, hdiv, td, hdiv, hdiv, hdiv, td, hdiv, hdiv, hdiv, urc, nl.
 
-last_separator :- write(' '), write('  '), llc, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, lrc, nl.
+last_separator :- write(' '), write('    '), llc, hdiv, hdiv, hdiv, tu, hdiv, hdiv, hdiv, tu, hdiv, hdiv, hdiv, tu, hdiv, hdiv, hdiv, tu, hdiv, hdiv, hdiv, tu, hdiv, hdiv, hdiv, lrc, nl.
 
 
 general_line_display([],_).
@@ -50,7 +50,7 @@ display_second_line([H | T]) :-
 
 % TODO: fazer depois display_line diferente para a primeira e ultima line para poder ser array quadrado
 display_first_line([H | T]) :-
-	write('  '), first_separator,
+	write('    '), first_separator,
 	write('  '), display_line(H), nl,
 	display_second_line(T).
 
@@ -70,7 +70,7 @@ display_line([corner | []]):-
 	corner,
 	null.
 display_line([Element | Rest]) :- 
-	Element, vdiv,
+	write(' '), Element, write(' '), vdiv,
 	display_line(Rest).
 
 final_board([
@@ -128,7 +128,7 @@ display_game(Board, Player):-
 
 cute_display :- 
 	clear,
-	middle_state_board(X),
+	empty_board(X),
 	display_game(X, 'Meias').
 
 
