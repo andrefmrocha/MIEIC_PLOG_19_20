@@ -20,7 +20,7 @@ tu :- ansi_format([fg(cyan)], '~c', [9577]). % ╩
 wt:- ansi_format([bold, fg(white)], '~c', [9679]). % Disco branco
 bl:- ansi_format([bold, fg(black)], '~c', [9679]). % Disco preto
 null:- write(' '). % Disco nulo
-corner:- write(' '). % Disco nulo
+corner:- write(' '). % Canto do Tabuleiro
 empty:- ansi_format([bold, bg(cyan)], '~s', [' ']). % Lugar vazio
 
 middle_separator :- write(' '), tr, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, mdiv, hdiv, hdiv, hdiv, tl, nl.
@@ -35,8 +35,8 @@ last_separator :- write(' '), write('    '), llc, hdiv, hdiv, hdiv, tu, hdiv, hd
 
 
 general_line_display([],_).
-general_line_display([H | []], _):-
-	display_last_line(H).
+general_line_display([H | []], N):-
+	display_last_line(H, N).
 general_line_display([H | T], N) :-
 	middle_separator,
 	write(N), vdiv, display_line(H), nl,
@@ -45,19 +45,20 @@ general_line_display([H | T], N) :-
 
 display_second_line([H | T]) :-
 	second_separator,
-	write('0'), vdiv, display_line(H), nl,
-	general_line_display(T, 1).
+	write('1'), vdiv, display_line(H), nl,
+	general_line_display(T, 2).
 
 % TODO: fazer depois display_line diferente para a primeira e ultima line para poder ser array quadrado
 display_first_line([H | T]) :-
 	write('    '), first_separator,
-	write('  '), display_line(H), nl,
+	write('0 '), display_line(H), nl,
 	display_second_line(T).
 
 % TODO: fazer depois display_line diferente para a primeira e ultima line para poder ser array quadrado
-display_last_line(Line) :-
+display_last_line(Line, N) :-
 	penultimate_separator,
-	write('  '), display_line(Line), nl,
+    write(N),
+	write(' '), display_line(Line), nl,
 	last_separator.
 
 display_board([], _).
@@ -123,7 +124,7 @@ empty_board([
 display_game(Board, Player):-
 	write('Player turn: '),
 	write(Player), nl, nl,
-	write('    A B C D E F'),nl,
+	write('   A   B   C   D   E   F   G   H'),nl,
 	display_first_line(Board).
 
 cute_display :- 
