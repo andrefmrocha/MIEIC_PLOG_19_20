@@ -19,7 +19,7 @@ tu :- ansi_format([fg(cyan)], '~c', [9577]). % ╩
 
 wt:- ansi_format([bold, fg(white)], '~c', [11044]), write(' '). % Disco branco
 bl:- ansi_format([bold, fg(black)], '~c', [11044]), write(' '). % Disco preto
-null:- write(' '). % Disco nulo
+null:- write('  '). % Disco nulo
 corner:- write(' '). % Canto do Tabuleiro
 empty:- ansi_format([bold, bg(cyan)], '~s', [' ']), ansi_format([bold, bg(cyan)], '~s', [' ']). % Lugar vazio
 
@@ -129,8 +129,8 @@ display_game(Board, Player):-
 
 cute_display :- 
 	clear,
-	empty_board(X),
-	display_game(X, 'Meias').
+	final_board(X),
+	display_game(X, 'John Doe').
 
 
 
