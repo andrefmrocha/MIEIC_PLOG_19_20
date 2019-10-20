@@ -1,27 +1,26 @@
-% display() :- display_board(board1, 'Ola').
 use_module(library(ansi_term)).
 
 clear :- write('\e[2J').
 
-ulc :- ansi_format([fg(cyan)], '~c', [9556]). % ╔
-urc :- ansi_format([fg(cyan)], '~c', [9559]). % ╗
-llc :- ansi_format([fg(cyan)], '~c', [9562]). % ╚
-lrc :- ansi_format([fg(cyan)], '~c', [9565]). % ╝
+ulc :- ansi_format([fg(cyan)], '~c', [9556]). % ╔ : upper left corner
+urc :- ansi_format([fg(cyan)], '~c', [9559]). % ╗ : upper right corner
+llc :- ansi_format([fg(cyan)], '~c', [9562]). % ╚ : lower left corner
+lrc :- ansi_format([fg(cyan)], '~c', [9565]). % ╝ : lower right corner
 
-hdiv :- ansi_format([fg(cyan)], '~c', [9552]), ansi_format([fg(cyan)], '~c', [9552]). % ═
-vdiv :- ansi_format([fg(cyan)], '~c', [9553]). % ║
-mdiv :- ansi_format([fg(cyan)], '~c', [9580]). % ╬
+hdiv :- ansi_format([fg(cyan)], '~c', [9552]), ansi_format([fg(cyan)], '~c', [9552]). % ═ : horizontal division
+vdiv :- ansi_format([fg(cyan)], '~c', [9553]). % ║ : vertical division
+mdiv :- ansi_format([fg(cyan)], '~c', [9580]). % ╬ : middle division
 
-tr :- ansi_format([fg(cyan)], '~c', [9568]). % ╠
-tl :- ansi_format([fg(cyan)], '~c', [9571]). % ╣
-td :- ansi_format([fg(cyan)], '~c', [9574]). % ╦
-tu :- ansi_format([fg(cyan)], '~c', [9577]). % ╩
+tr :- ansi_format([fg(cyan)], '~c', [9568]). % ╠ : T right
+tl :- ansi_format([fg(cyan)], '~c', [9571]). % ╣ : T left
+td :- ansi_format([fg(cyan)], '~c', [9574]). % ╦ : T down
+tu :- ansi_format([fg(cyan)], '~c', [9577]). % ╩ : T up
 
-wt:- ansi_format([bold, fg(white)], '~c', [11044]), write(' '). % Disco branco
-bl:- ansi_format([bold, fg(black)], '~c', [11044]), write(' '). % Disco preto
-null:- write('  '). % Disco nulo
-corner:- write(' '). % Canto do Tabuleiro
-empty:- ansi_format([bold, bg(cyan)], '~s', [' ']), ansi_format([bold, bg(cyan)], '~s', [' ']). % Lugar vazio
+wt:- ansi_format([bold, fg(white)], '~c', [11044]), write(' '). % White piece
+bl:- ansi_format([bold, fg(black)], '~c', [11044]), write(' '). % Black piece
+null:- write('  '). % Null space
+corner:- write(' '). % Board corner
+empty:- ansi_format([bold, bg(cyan)], '~s', [' ']), ansi_format([bold, bg(cyan)], '~s', [' ']). % Empty space
 
 middle_separator :- write(' '), tr, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, tl, nl.
 
@@ -33,7 +32,7 @@ first_separator :- write(' '), ulc, hdiv, td, hdiv, td, hdiv, td, hdiv, td, hdiv
 
 last_separator :- write(' '), write('   '), llc, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, lrc, nl.
 
-
+% general_line_display(Line, Row_Number). -> 2 - 6
 general_line_display([],_).
 general_line_display([H | []], N):-
 	display_last_line(H, N).
@@ -43,29 +42,28 @@ general_line_display([H | T], N) :-
 	N1 is N + 1,
 	general_line_display(T, N1).
 
-display_second_line([H | T]) :-
+% display_second_line(Line, Row_Number). -> 1
+display_second_line([H | T], N) :-
 	second_separator,
-	write('1'), vdiv, display_line(H), nl,
-	general_line_display(T, 2).
+	write(N), vdiv, display_line(H), nl,
+	N1 is N + 1,
+	general_line_display(T, N1).
 
-% TODO: fazer depois display_line diferente para a primeira e ultima line para poder ser array quadrado
-display_first_line([H | T]) :-
+% display_first_line(Line, Row_Number). -> 0
+display_first_line([H | T], N) :-
 	write('   '), first_separator,
-	write('0  '), display_line(H), nl,
-	display_second_line(T).
+	write(N), write('  '), display_line(H), nl,
+	N1 is N + 1,
+	display_second_line(T, N1).
 
-% TODO: fazer depois display_line diferente para a primeira e ultima line para poder ser array quadrado
+% display_last_line(Line, Row_Number). -> 7
 display_last_line(Line, N) :-
 	penultimate_separator,
     write(N),
 	write('  '), display_line(Line), nl,
 	last_separator.
 
-display_board([], _).
-display_board([Line | Rest], Player) :-
-	display_line(Line), nl, 
-	display_board(Rest, Player).
-
+% display_line(Line).
 display_line([]).
 display_line([corner | []]):-
 	corner,
@@ -84,8 +82,6 @@ final_board([
     [null, empty, empty, empty, bl, wt, empty, null], %7
     [corner, null, null, null, null, null, null, corner]  %8
 ]).
-
-
 
 middle_state_board([
     [corner, null, null, null, null, wt, null, corner], %1
@@ -109,7 +105,6 @@ second_middle_board([
     [corner, bl, wt, wt, bl, wt, wt, corner]  %8
 ]).
 
-
 empty_board([
     [corner, wt, bl, wt, bl, bl, wt, corner], %1
     [wt, empty, empty, empty, empty, empty, empty, wt], %2
@@ -125,7 +120,7 @@ display_game(Board, Player):-
 	write('Player turn: '),
 	write(Player), nl, nl,
 	write('   A  B  C  D  E  F  G  H'),nl,
-	display_first_line(Board).
+	display_first_line(Board, 0).
 
 cute_display :- 
 	clear,
