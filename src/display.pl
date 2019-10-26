@@ -1,6 +1,7 @@
 :- use_module(library(ansi_term)).
 :- ensure_loaded('board_pieces.pl').
 :- ensure_loaded('board_states.pl').
+:- ensure_loaded('board_generation.pl').
 
 % created to ensure there's a clear separation line between board lines
 middle_separator :- write(' '), tr, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, tl, nl.
@@ -65,11 +66,8 @@ display_game(Board, Player):-
 
 cute_display :- 
 	clear,
-	final_board(X),
-	display_game(X, 'John Doe').
-
-cute_display(Board) :- 
-	clear,
+	empty_board(X),
+	initialize_board(X, Board),
 	display_game(Board, 'John Doe').
 
 

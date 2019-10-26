@@ -34,12 +34,12 @@ second_middle_board([
 ]).
 
 empty_board([
-    [corner, wt, bl, wt, bl, bl, wt, corner], %1
-    [wt, empty, empty, empty, empty, empty, empty, wt], %2
-    [bl, empty, empty, empty, empty, empty, empty, bl], %3
-    [wt, empty, empty, empty, empty, empty, empty, wt], %4
-    [wt, empty, empty, empty, empty, empty, empty, bl], %5
-    [bl, empty, empty, empty, empty, empty, empty, bl], %6
-    [wt, empty, empty, empty, empty, empty, empty, wt], %7
-    [corner, bl, wt, wt, bl, wt, wt, corner]  %8
+    [corner, null, null, null, null, null, null, corner], %1
+    [null, empty, empty, empty, empty, empty, empty, null], %2
+    [null, empty, empty, empty, empty, empty, empty, null], %3
+    [null, empty, empty, empty, empty, empty, empty, null], %4
+    [null, empty, empty, empty, empty, empty, empty, null], %5
+    [null, empty, empty, empty, empty, empty, empty, null], %6
+    [null, empty, empty, empty, empty, empty, empty, null], %7
+    [corner, null, null, null, null, null, null, corner]  %8
 ]).
