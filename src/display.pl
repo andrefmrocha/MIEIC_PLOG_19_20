@@ -2,14 +2,19 @@
 :- ensure_loaded('board_pieces.pl').
 :- ensure_loaded('board_states.pl').
 
+% created to ensure there's a clear separation line between board lines
 middle_separator :- write(' '), tr, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, tl, nl.
 
+% creates a separator between the board and the upper left and right corners
 second_separator :- write(' '), ulc, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, urc, nl.
 
+% create a separator between the board and the bottom left and right corners
 penultimate_separator :- write(' '), llc, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, mdiv, hdiv, lrc, nl.
 
+% creates the line first line for board
 first_separator :- write(' '), ulc, hdiv, td, hdiv, td, hdiv, td, hdiv, td, hdiv, td, hdiv, urc, nl.
 
+% creates the last line for the board
 last_separator :- write(' '), write('   '), llc, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, tu, hdiv, lrc, nl.
 
 % general_line_display(Line, Row_Number). -> 2 - 6
@@ -62,6 +67,10 @@ cute_display :-
 	clear,
 	final_board(X),
 	display_game(X, 'John Doe').
+
+cute_display(Board) :- 
+	clear,
+	display_game(Board, 'John Doe').
 
 
 
