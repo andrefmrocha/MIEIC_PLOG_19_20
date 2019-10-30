@@ -3,6 +3,8 @@
 :- ensure_loaded('board_pieces.pl').
 :- ensure_loaded('board_states.pl').
 
+% TODO: por num utils ou smt like that (talvez mudar o board_traversing para isso)
+secondLast(L, X) :- append(_, [X, _], L).
 
 initialize_board(Board, FinalBoard):-
     generate_pieces(_, Pieces, 24),
@@ -27,6 +29,19 @@ generate_line([H | T], Line, FinalLine, Pieces, NewPieces):-
     generate_line(T, NewLine, FinalLine, Pieces, NewPieces).
 
 generate_pieces(PiecesList, PiecesList, 0).
+
+generate_pieces(List, PiecesList, 1):-
+	secondLast(List, wt),
+	last(List, wt),
+    append([bl], List, NewPiecesList),
+    generate_pieces(NewPiecesList, PiecesList, 0).
+	
+generate_pieces(List, PiecesList, 1):-
+	secondLast(List, bl),
+	last(List, bl),
+    append([wt], List, NewPiecesList),
+    generate_pieces(NewPiecesList, PiecesList, 0).
+
 generate_pieces([], PiecesList, NumPieces):-
     random_between(0, 1, Random),
     select_piece(Random, Piece),
