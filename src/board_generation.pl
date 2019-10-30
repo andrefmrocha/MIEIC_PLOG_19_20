@@ -25,7 +25,19 @@ generate_line([H | T], Line, FinalLine, Pieces, NewPieces):-
 
 
 % TODO: ! para cortar varias soluções
-generate_pieces(PiecesList, PiecesList, 0).
+generate_pieces(PiecesList, PiecesList, 0) :- write(PiecesList).
+
+generate_pieces([], PiecesList, NumPieces):-
+    random_between(0, 1, Random),
+    select_piece(Random, Piece),
+    Num is NumPieces - 1,
+    generate_pieces([Piece], PiecesList, Num).
+generate_pieces([H | []], PiecesList, NumPieces):-
+    random_between(0, 1, Random),
+    select_piece(Random, Piece),
+    Num is NumPieces - 1,
+    append([Piece], [H], NewPiecesList),
+    generate_pieces(NewPiecesList, PiecesList, Num).
 
 generate_pieces(List, PiecesList, 1):-
 	secondLast(List, wt),
@@ -39,17 +51,16 @@ generate_pieces(List, PiecesList, 1):-
     append([wt], List, NewPiecesList),
     generate_pieces(NewPiecesList, PiecesList, 0).
 
-generate_pieces([], PiecesList, NumPieces):-
-    random_between(0, 1, Random),
-    select_piece(Random, Piece),
-    Num is NumPieces - 1,
-    generate_pieces([Piece], PiecesList, Num).
-generate_pieces([H | []], PiecesList, NumPieces):-
-    random_between(0, 1, Random),
-    select_piece(Random, Piece),
-    Num is NumPieces - 1,
-    append([Piece], [H], NewPiecesList),
-    generate_pieces(NewPiecesList, PiecesList, Num).
+generate_pieces([wt | T], PiecesList, 1):-
+	last([wt | T], wt),
+    append([bl], [wt | T], NewPiecesList),
+    generate_pieces(NewPiecesList, PiecesList, 0).
+	
+generate_pieces([bl | T], PiecesList, 1):-
+	last([bl | T], bl),
+    append([wt], [bl | T], NewPiecesList),
+    generate_pieces(NewPiecesList, PiecesList, 0).
+
 generate_pieces([wt, wt | T], PiecesList, NumPieces):-
     Num is NumPieces - 1,
     append([bl], [wt | [wt | T]], NewPiecesList),

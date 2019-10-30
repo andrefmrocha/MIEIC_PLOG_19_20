@@ -67,7 +67,6 @@ display_game(Board, Player):-
 cute_display :- 
 	clear,
 	empty_board(X),
-	%debug_board(X),
 	initialize_board(X, Board),
 	display_game(Board, 'John Doe').
 
