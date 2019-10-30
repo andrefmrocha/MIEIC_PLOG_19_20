@@ -1,23 +1,18 @@
 :- use_module(library(random)).
-:- ensure_loaded('board_traversing.pl').
+:- ensure_loaded('utils.pl').
 :- ensure_loaded('board_pieces.pl').
 :- ensure_loaded('board_states.pl').
 
-% TODO: por num utils ou smt like that (talvez mudar o board_traversing para isso)
-secondLast(L, X) :- append(_, [X, _], L).
-
 initialize_board(Board, FinalBoard):-
     generate_pieces(_, Pieces, 24),
-    NewBoard = [], 
-    generate_board(Board, NewBoard, FinalBoard, Pieces),
-    write(FinalBoard).
+	generate_board(Board, FinalBoard, Pieces).
 
+generate_board(Board, Board, []).
+generate_board([FirstRow | Rest], Final, Pieces) :-
+	generate_line(FirstRow, [], NewLine, Pieces, NewPieces),
+	rotateBoard([NewLine | Rest], NewRot),
+	generate_board(NewRot, Final, NewPieces).	
 
-generate_board([], Board, Board, []).
-generate_board([H | T], Board, FinalBoard, Pieces):-
-    generate_line(H, [], NewLine, Pieces, NewPieces),
-    append(Board, [NewLine], NewBoard),
-    generate_board(T, NewBoard, FinalBoard, NewPieces).
 
 generate_line([], Line, Line, Pieces, Pieces).
 generate_line([null | T1], Line, FinalLine, [H | T2], NewPieces):-
@@ -28,6 +23,8 @@ generate_line([H | T], Line, FinalLine, Pieces, NewPieces):-
     append(Line, [H], NewLine),
     generate_line(T, NewLine, FinalLine, Pieces, NewPieces).
 
+
+% TODO: ! para cortar varias soluções
 generate_pieces(PiecesList, PiecesList, 0).
 
 generate_pieces(List, PiecesList, 1):-

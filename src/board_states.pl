@@ -43,3 +43,10 @@ empty_board([
     [null, empty, empty, empty, empty, empty, empty, null], %7
     [corner, null, null, null, null, null, null, corner]  %8
 ]).
+
+debug_board([
+    [corner, null, null, corner], %1
+    [null,  empty, empty, null], %2
+    [null, empty, empty, null], %7
+    [corner, null, null, corner]  %8
+]).
