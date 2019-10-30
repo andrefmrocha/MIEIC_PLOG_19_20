@@ -3,20 +3,23 @@
 :- ensure_loaded('board_pieces.pl').
 
 move_simple :- 
-	empty_board(X),
-	initialize_board(X, Board), !, 
-	move(Board, _).
+	%empty_board(X),
+	%initialize_board(X, Board), !, 
+	second_middle_board(Board), !,
+	move(Board, _, 1).
 
-move(Board, NewBoard) :-
-	display_game(Board, 'John Doe'), !,
+move(Board, NewBoard, Player) :-
+	display_game(Board, Player), !,
 	read_move(Move, Board),
 	valid_move(Move, Board),
 	[IC, IR, FC, FR] = Move,
 	get_element_matrix(IR, IC, Element, Board),
+	player_element(Player, Element),
 	replace_matrix(FR, FC, Element, Board, NewBoardProv),
 	replace_matrix(IR, IC, null, NewBoardProv, NewBoard),
 	clear,
-	display_game(NewBoard, 'John Doe').
+	next_player(Player, NextPlayer),
+	display_game(NewBoard, NextPlayer).
 
 valid_move(Move, Board) :- top_move(Move, Board).
 valid_move(Move, Board) :- bottom_move(Move, Board).
@@ -63,4 +66,53 @@ vertical_move(IC, FC, Line) :-
 
 
 
+next_player(PrevPlayer, NextPlayer) :-
+	ProvPlayer is PrevPlayer + 1,
+	NextPlayer is mod(ProvPlayer, 2).
+
+% player_element(Player, Piece).
+player_element(0, wt).
+player_element(1, bl).
+
+% push(+FinalIndex, +List, -NewList).
+push(Index, List, Solution) :- 
+	push_helper(Index, List, Solution, []).
+
+push_helper(0, [empty | Remain], Sol, Acc) :- 
+	length([empty | Remain], N1),
+	length(Acc, N2),
+	N is N1 - N2,
+	N >= 0,
+	last_n_elements(N, [empty | Remain], LastN),
+	append(Acc, LastN, Sol), !.
+
+push_helper(0, [Other | Remain], Sol, Acc) :- 
+	push(1, [Other | Remain], NewTail),
+	length(NewTail, N1),
+	length(Acc, N2),
+	N is N1 - N2,
+	N >= 0,
+	last_n_elements(N, NewTail, LastN),
+	append(Acc, LastN, Sol), !.
+
+push_helper(Index, [empty | Tail], [empty | TailSol], Acc) :-
+	NewIndex is Index - 1,
+	push_helper(NewIndex, Tail, TailSol, Acc).
+
+push_helper(Index, [Other | Tail], [empty |TailSol], Acc) :-
+	NewIndex is Index - 1,
+	append(Acc, [Other], NewAcc), !,
+	push_helper(NewIndex, Tail, TailSol, NewAcc).
+
+
+% push_helper(0, Sol, Sol).
+
+% push_helper(Index, [empty | Tail], [empty | TailSol]) :-
+% 	NewIndex is Index - 1,
+% 	push_helper(NewIndex, Tail, TailSol).
+
+% push_helper(Index, [Other, empty | Tail], [empty, Other | TailSol]) :-
+% 	push(1, Tail, NewTail),
+% 	NewIndex is Index - 1,
+% 	push_helper(NewIndex, NewTail, TailSol).
 	

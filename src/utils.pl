@@ -29,3 +29,7 @@ replace_matrix(Row, Column, Value, [H | T], [H | T2]) :-
 get_element_matrix(Row, Column, Element, Matrix) :-
 	nth0(Row, Matrix, SearchedRow),
 	nth0(Column, SearchedRow, Element).
+
+last_n_elements(N, List, LastN) :-
+	length(LastN, N),
+	append(_, LastN, List), !.
