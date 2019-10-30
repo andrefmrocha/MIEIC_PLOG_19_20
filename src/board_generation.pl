@@ -25,7 +25,7 @@ generate_line([H | T], Line, FinalLine, Pieces, NewPieces):-
 
 
 % TODO: ! para cortar varias soluções
-generate_pieces(PiecesList, PiecesList, 0) :- write(PiecesList).
+generate_pieces(PiecesList, PiecesList, 0).
 
 generate_pieces([], PiecesList, NumPieces):-
     random_between(0, 1, Random),
