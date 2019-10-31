@@ -75,44 +75,16 @@ player_element(0, wt).
 player_element(1, bl).
 
 % push(+FinalIndex, +List, -NewList).
-push(Index, List, Solution) :- 
-	push_helper(Index, List, Solution, []).
+push(Index, [H | Tail], Solution) :- 
+	push_helper(Index, Tail, Solution, H).
 
-push_helper(0, [empty | Remain], Sol, Acc) :- 
-	length([empty | Remain], N1),
-	length(Acc, N2),
-	N is N1 - N2,
-	N >= 0,
-	last_n_elements(N, [empty | Remain], LastN),
-	append(Acc, LastN, Sol), !.
+push_helper(0, Sol, [H | Sol], H) :- !.
 
-push_helper(0, [Other | Remain], Sol, Acc) :- 
-	push(1, [Other | Remain], NewTail),
-	length(NewTail, N1),
-	length(Acc, N2),
-	N is N1 - N2,
-	N >= 0,
-	last_n_elements(N, NewTail, LastN),
-	append(Acc, LastN, Sol), !.
-
-push_helper(Index, [empty | Tail], [empty | TailSol], Acc) :-
+push_helper(Index, [empty | Tail], [empty | TailSol], H) :-
 	NewIndex is Index - 1,
-	push_helper(NewIndex, Tail, TailSol, Acc).
+	!, push_helper(NewIndex, Tail, TailSol, H).
 
-push_helper(Index, [Other | Tail], [empty |TailSol], Acc) :-
+push_helper(Index, [Other | Tail], [empty | TailSol], H) :-
+	push(1, [Other | Tail], [_ | NewTail]),
 	NewIndex is Index - 1,
-	append(Acc, [Other], NewAcc), !,
-	push_helper(NewIndex, Tail, TailSol, NewAcc).
-
-
-% push_helper(0, Sol, Sol).
-
-% push_helper(Index, [empty | Tail], [empty | TailSol]) :-
-% 	NewIndex is Index - 1,
-% 	push_helper(NewIndex, Tail, TailSol).
-
-% push_helper(Index, [Other, empty | Tail], [empty, Other | TailSol]) :-
-% 	push(1, Tail, NewTail),
-% 	NewIndex is Index - 1,
-% 	push_helper(NewIndex, NewTail, TailSol).
-	
+	!, push_helper(NewIndex, NewTail, TailSol, H).
