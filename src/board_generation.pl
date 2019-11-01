@@ -10,7 +10,7 @@ initialize_board(Board, FinalBoard):-
 generate_board(Board, Board, []).
 generate_board([FirstRow | Rest], Final, Pieces) :-
 	generate_line(FirstRow, [], NewLine, Pieces, NewPieces),
-	rotateBoard([NewLine | Rest], NewRot),
+	rotate_board_clockwise([NewLine | Rest], NewRot, -1),
 	generate_board(NewRot, Final, NewPieces).	
 
 

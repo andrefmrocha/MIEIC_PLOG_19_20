@@ -34,28 +34,28 @@ points_calculation(Visited, Disc, Points, MaxPoints, X, Y):-
     YDown is Y + 1,
     YUp is Y - 1,
     replace_matrix(X, Y, visited, Visited, FirstVisited),
-    board_floor(FirstVisited, SecondVisited, Disc, RightPoints, XRight, Y),
-    board_floor(SecondVisited, ThirdVisited, Disc, LeftPoints, XLeft, Y),
-    board_floor(ThirdVisited, FourthVisited, Disc, DownPoints, X, YDown),
-    board_floor(FourthVisited, FinalVisited, Disc, UpPoints, X, YUp),
+    board_flood(FirstVisited, SecondVisited, Disc, RightPoints, XRight, Y),
+    board_flood(SecondVisited, ThirdVisited, Disc, LeftPoints, XLeft, Y),
+    board_flood(ThirdVisited, FourthVisited, Disc, DownPoints, X, YDown),
+    board_flood(FourthVisited, FinalVisited, Disc, UpPoints, X, YUp),
     pos_points(Elem, Disc, Value),
     NewPoints is RightPoints + LeftPoints + UpPoints + DownPoints + Value,
     max_points(NewPoints, Points, NewMax),
     points_calculation(FinalVisited, Disc, NewMax, MaxPoints, XRight, Y).
 
 
-%points_calculation(+Board, -NewBoard,+CurrentDisc, -Points, +X, +Y)
-board_floor(Visited, Visited, _, Points, X, Y):-
+%board_flood(+Board, -NewBoard,+CurrentDisc, -Points, +X, +Y)
+board_flood(Visited, Visited, _, Points, X, Y):-
     \+ getPiece(Visited, X, Y, _),
     Points is 0.
-board_floor(Visited, Visited, _, Points, X, Y):-
+board_flood(Visited, Visited, _, Points, X, Y):-
     getPiece(Visited, X, Y, visited),
     Points is 0.
-board_floor(Visited, Visited, Disc, Points, X, Y):-
+board_flood(Visited, Visited, Disc, Points, X, Y):-
     getPiece(Visited, X, Y, Elem),
     Elem \= Disc,
     Points is 0.
-board_floor(Visited, NewVisited, Disc, Points, X, Y):-
+board_flood(Visited, NewVisited, Disc, Points, X, Y):-
     getPiece(Visited, X, Y, Elem),
     Visited \= visited,
     XRight is X + 1,
@@ -63,10 +63,10 @@ board_floor(Visited, NewVisited, Disc, Points, X, Y):-
     YDown is Y + 1,
     YUp is Y - 1,
     replace_matrix(X, Y, visited, Visited, FirstNewVisited),
-    board_floor(FirstNewVisited, SecondNewVisited, Disc, RightPoints, XRight, Y),
-    board_floor(SecondNewVisited, ThirdNewVisited, Disc, LeftPoints, XLeft, Y),
-    board_floor(ThirdNewVisited, FourthNewVisited, Disc, DownPoints, X, YDown),
-    board_floor(FourthNewVisited, NewVisited, Disc, UpPoints, X, YUp),
+    board_flood(FirstNewVisited, SecondNewVisited, Disc, RightPoints, XRight, Y),
+    board_flood(SecondNewVisited, ThirdNewVisited, Disc, LeftPoints, XLeft, Y),
+    board_flood(ThirdNewVisited, FourthNewVisited, Disc, DownPoints, X, YDown),
+    board_flood(FourthNewVisited, NewVisited, Disc, UpPoints, X, YUp),
     pos_points(Elem, Disc, Value),
     Points is RightPoints + LeftPoints + UpPoints + DownPoints + Value.
     
@@ -84,7 +84,4 @@ max_points(Points, MaxPoints, Points):-
 max_points(_, MaxPoints, MaxPoints).
 
 
-test:-
-    final_board(X),
-    points_calculation(X, bl, Points),
-    write('Points: '), write(Points).
+
