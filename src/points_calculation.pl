@@ -1,11 +1,16 @@
 :- ensure_loaded('utils.pl').
 :- ensure_loaded('board_states.pl').
 
-%points_calculation(+Board, +CurrentDisc, -Points)
+%! points_calculation(+Board, +CurrentDisc, -Points)
+% Calculate the number of points of the given Disc.
+% Is true when given points are the maximum calculatable in the Board.
+% @param Board must be a list of lists
 points_calculation(Visited, Disc, MaxPoints):-
     points_calculation(Visited, Disc, _, MaxPoints, 0, 0).
 
-%points_calculation(+Board, +CurrentDisc, +Points, -MaxPoints, +X, +Y)
+%! points_calculation(+Board, +CurrentDisc, +Points, -MaxPoints, +X, +Y)
+% Calculate the number of points starting off in some coordinates
+% @param Board must be a list of lists
 points_calculation(Visited, _, Points, Points, X, Y):-
     \+ getPiece(Visited, X, Y, _),
     YDown is Y + 1,
@@ -38,13 +43,15 @@ points_calculation(Visited, Disc, Points, MaxPoints, X, Y):-
     board_flood(SecondVisited, ThirdVisited, Disc, LeftPoints, XLeft, Y),
     board_flood(ThirdVisited, FourthVisited, Disc, DownPoints, X, YDown),
     board_flood(FourthVisited, FinalVisited, Disc, UpPoints, X, YUp),
-    pos_points(Elem, Disc, Value),
-    NewPoints is RightPoints + LeftPoints + UpPoints + DownPoints + Value,
+    NewPoints is RightPoints + LeftPoints + UpPoints + DownPoints + 1,
     max_points(NewPoints, Points, NewMax),
     points_calculation(FinalVisited, Disc, NewMax, MaxPoints, XRight, Y).
 
 
-%board_flood(+Board, -NewBoard,+CurrentDisc, -Points, +X, +Y)
+%! board_flood(+Board, -NewBoard,+CurrentDisc, -Points, +X, +Y)
+% Implements a flooding algoritm to calculate the nearby discs 
+% the same type as CurrentDisc.
+% @param Board must be a list of lists
 board_flood(Visited, Visited, _, Points, X, Y):-
     \+ getPiece(Visited, X, Y, _),
     Points is 0.
@@ -70,13 +77,10 @@ board_flood(Visited, NewVisited, Disc, Points, X, Y):-
     pos_points(Elem, Disc, Value),
     Points is RightPoints + LeftPoints + UpPoints + DownPoints + Value.
     
-%pos_points(Element, CurrentDisc, -Value)
-pos_points(Elem, Elem, 1).
-pos_points(Elem, Disc, 0):-
-    Disc \= Elem.
 
 
-%max_points(Points, CurrentMaxPoints, -MaxPoints)
+%! max_points(Points, CurrentMaxPoints, -MaxPoints)
+% Calculates the maximum number between two given numbers
 max_points(Points, MaxPoints, Points):-
     \+ number(MaxPoints), !.
 max_points(Points, MaxPoints, Points):-
