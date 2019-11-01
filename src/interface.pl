@@ -1,12 +1,5 @@
-:- ensure_loaded('board_states.pl').
-
 ccA(X) :- char_code('A', X).	% A char code
 cc0(X) :- char_code('0', X).	% 0 char code
-
-% Only for debug purposes
-read_move_simpl(Move) :-
-	empty_board(X),
-	read_move(Move, X).
 
 % read_move(-Move, +Board) :- returns list with the move in the format [ICN, IRN, FCN, FRN].
 % ICN :- Initial Column Number
@@ -20,15 +13,20 @@ read_move(Move, Board):-
 
 % parse_move(-Input, +Move, -Board) - tests the length of the input and calls @valid_move_input to validate the input
 parse_move(Input, Move, Board) :-
-	!, length(Input, Comp),
+	length(Input, Comp),
 	Comp == 4,
 	valid_move_input(Input, Move, Board).
+
+parse_move(Input, Move, Board) :-
+	length(Input, Comp),
+	Comp == 4,
+	valid_move_input(Input, _, Board), !, read_move(Move, Board).
 
 % In case the input is empty calls read_move again
 parse_move([], M, B) :- !, read_move(M, B).
 
 % In case of invalid input, shows error message and fails (TODO: change to read_move again)
-parse_move(_, _, _) :- write(' Move format is wrong: IC IR FC FR (without spacing)\n'), fail.
+parse_move(_, M, B) :- write(' Move format is wrong: IC IR FC FR (without spacing)\n'), !, read_move(M, B).
 
 % valid_move_input(-Input, +Move, -Board) :- validates each of the four input chars and transforms each one to a number
 valid_move_input([IC, IR, FC, FR], [IC_N, IR_N, FC_N, FR_N], [Line | Board]) :-

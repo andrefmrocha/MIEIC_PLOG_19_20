@@ -2,22 +2,12 @@
 :- ensure_loaded('utils.pl').
 :- ensure_loaded('board_pieces.pl').
 
-move_simple :- 
-	%empty_board(X),
-	%initialize_board(X, Board), !, 
-	second_middle_board(Board), !,
-	move(Board, _, 1).
-
-move(Board, NewBoard, Player) :-
-	display_game(Board, Player), !,
-	read_move(Move, Board),
+move(Board, Move, NewBoard, Player) :-
 	[IC, IR, FC, FR] = Move,
 	get_element_matrix(IR, IC, Element, Board),
 	player_element(Player, Element),
 	valid_push(IC, IR, FC, FR, Board, ProvNewBoard),
-	replace_matrix(IR, IC, null, ProvNewBoard, NewBoard),
-	next_player(Player, NextPlayer),
-	display_game(NewBoard, NextPlayer).
+	replace_matrix(IR, IC, null, ProvNewBoard, NewBoard).
 
 valid_push(IC, IR, FC, FR, Board, NewBoard) :- top_move(IC, IR, FC, FR, Board, NewBoard).
 valid_push(IC, IR, FC, FR, Board, NewBoard) :- bottom_move(IC, IR, FC, FR, Board, NewBoard).
