@@ -84,7 +84,4 @@ max_points(Points, MaxPoints, Points):-
 max_points(_, MaxPoints, MaxPoints).
 
 
-test:-
-    final_board(X),
-    points_calculation(X, bl, Points),
-    write('Points: '), write(Points).
+
