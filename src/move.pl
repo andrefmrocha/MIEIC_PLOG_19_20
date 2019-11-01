@@ -6,7 +6,7 @@ move(Board, Move, NewBoard, Player) :-
 	[IC, IR, FC, FR] = Move,
 	get_element_matrix(IR, IC, Element, Board),
 	player_element(Player, Element),
-	valid_push(IC, IR, FC, FR, Board, ProvNewBoard),
+	valid_push(IC, IR, FC, FR, Board, ProvNewBoard), %!, % descomentar para só dar T/F
 	replace_matrix(IR, IC, null, ProvNewBoard, NewBoard).
 
 valid_push(IC, IR, FC, FR, Board, NewBoard) :- top_move(IC, IR, FC, FR, Board, NewBoard).
@@ -99,4 +99,24 @@ push_bottom(Column, Index, Board, NewBoard) :-
 	rotate_board_clockwise(Board, RotatedBoard, 1),
 	push_left(Column, Index, RotatedBoard, NewRotatedBoard),
 	rotate_board_clockwise(NewRotatedBoard, NewBoard, -1).
+	
+inside_board([Line | TBoard], Column, Row) :-
+	get_element_matrix(Row, Column, _, [Line | TBoard]),
+	horizontal_move(Row, Row, [Line | TBoard], _), 
+	vertical_move(Column, Column, Line, _).
+
+findall_moves_helper([], _, _, Prov, Prov) :- !.
+
+findall_moves_helper([[FC, FR] | Remain], Board, Player, Moves, Sol) :-
+	findall([IC, IR] - [FC, FR], move(Board, [IC, IR, FC, FR], _, Player), List),
+	!, append(Moves, List, NewMoves),
+	!, findall_moves_helper(Remain, Board, Player, NewMoves, Sol).
+
+findall_moves(Board, Player, Moves) :-
+	findall([FC, FR], inside_board(Board, FC, FR), FinalPos),
+	!, findall_moves_helper(FinalPos, Board, Player, _, Moves).
+
+pass_move(Board, Player) :-
+	findall_moves(Board, Player, Moves),
+	Moves == [].
 	

@@ -23,3 +23,33 @@ display_debug :-
 	empty_board(X),
 	initialize_board(X, Board), !,
 	display_game(Board, 'John Doe').
+
+findall_moves(Player, List) :-
+	second_middle_board(Board),
+	display_game(Board, Player),
+	findall([IC, IR] - [FC, FR], move(Board, [IC, IR, FC, FR], _, Player), List).
+
+move_debug_2(IC, IR, FC, FR) :- 
+	%empty_board(X),
+	%initialize_board(X, Board), !, 
+	second_middle_board(Board),
+	move(Board, [IC, IR, FC, FR], _, 0).
+
+move_debug_3(IC, IR) :- 
+	%empty_board(X),
+	%initialize_board(X, Board), !, 
+	second_middle_board(Board),
+	move(Board, [IC, IR, 2, 3], _, 0).
+
+inside_board_debug(C, R) :-
+	empty_board(X),
+	inside_board(X, C, R).
+
+all_moves_debug(Player, Moves) :- 
+	second_middle_board(Board),
+	findall_moves(Board, Player, Moves).
+
+pass_move_debug(Player) :-
+	second_middle_board(Board),
+	pass_move(Board, Player).
+

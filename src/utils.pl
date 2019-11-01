@@ -1,10 +1,6 @@
 :- use_module(library(lists)).
 :- use_module(library(clpfd)).
 
-getPiece(Board, X, Y, Elem):-
-    nth0(Board, X, Line),
-    nth0(Line, Y, Elem).
-
 secondLast(L, X) :- append(_, [X, _], L).
 
 rotate_board_clockwise(Board, NewBoard, N) :-
