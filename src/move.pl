@@ -11,57 +11,60 @@ move_simple :-
 move(Board, NewBoard, Player) :-
 	display_game(Board, Player), !,
 	read_move(Move, Board),
-	valid_move(Move, Board),
 	[IC, IR, FC, FR] = Move,
 	get_element_matrix(IR, IC, Element, Board),
 	player_element(Player, Element),
-	push(IC, IR, FC, FR, Board, ProvNewBoard),
+	valid_push(IC, IR, FC, FR, Board, ProvNewBoard),
 	replace_matrix(IR, IC, null, ProvNewBoard, NewBoard),
 	next_player(Player, NextPlayer),
 	display_game(NewBoard, NextPlayer).
 
-valid_move(Move, Board) :- top_move(Move, Board).
-valid_move(Move, Board) :- bottom_move(Move, Board).
-valid_move(Move, Board) :- right_move(Move, Board).
-valid_move(Move, Board) :- left_move(Move, Board).
+valid_push(IC, IR, FC, FR, Board, NewBoard) :- top_move(IC, IR, FC, FR, Board, NewBoard).
+valid_push(IC, IR, FC, FR, Board, NewBoard) :- bottom_move(IC, IR, FC, FR, Board, NewBoard).
+valid_push(IC, IR, FC, FR, Board, NewBoard) :- right_move(IC, IR, FC, FR, Board, NewBoard).
+valid_push(IC, IR, FC, FR, Board, NewBoard) :- left_move(IC, IR, FC, FR, Board, NewBoard).
 
-top_move([IC, IR, FC, FR], [Line | _]) :-
-	IR == 0,
-	FR > IR,
-	vertical_move(IC, FC , Line).
+top_move(IC, 0, FC, FR, [Line | TailBoard], NewBoard) :-
+	FR > 0,
+	vertical_move(IC, FC , Line, UpperBound),
+	Column is UpperBound - IC,
+	push_top(Column, FR, [Line | TailBoard], NewBoard).
 
-bottom_move([IC, IR, FC, FR], [Line | BoardT]) :-
+bottom_move(IC, IR, FC, FR, [Line | BoardT], NewBoard) :-
 	FR < IR,
 	length([Line | BoardT], Comp),
 	LastRow is Comp - 1,
 	IR == LastRow,
-	vertical_move(IC, FC , Line).
+	vertical_move(IC, FC , Line, _),
+	Index is IR - FR,
+	push_bottom(IC, Index, [Line | BoardT], NewBoard).
 
-right_move([IC, IR, FC, FR], [Line | BoardT]) :-
+right_move(IC, IR, FC, FR, [Line | BoardT], NewBoard) :-
 	FC < IC,
 	length(Line, Comp),
 	LastColumn is Comp - 1,
 	IC == LastColumn,
-	horizontal_move(IR, FR , [Line | BoardT]).
+	horizontal_move(IR, FR , [Line | BoardT], UpperBound),
+	Index is IC - FC,
+	Row is UpperBound - IR,
+	push_right(Row, Index, [Line | BoardT], NewBoard).
 
-left_move([IC, IR, FC, FR], Board) :-
-	IC == 0,
-	FC > IC,
-	horizontal_move(IR, FR , Board).
+left_move(0, IR, FC, FR, Board, NewBoard) :-
+	FC > 0,
+	horizontal_move(IR, FR , Board, _),
+	push_left(IR, FC, Board, NewBoard).
 
-horizontal_move(IR, FR, Board) :-
-	IR == FR,
-	IR > 0, 
+horizontal_move(Row, Row, Board, UpperBound) :-
+	Row > 0, 
 	length(Board, Comp),
 	UpperBound is Comp - 1,
-	IR < UpperBound.
+	Row < UpperBound.
 
-vertical_move(IC, FC, Line) :-
-	FC == IC,
-	IC > 0,
+vertical_move(Column, Column, Line, UpperBound) :-
+	Column > 0,
 	length(Line, Comp),
 	UpperBound is Comp - 1,
-	IC < UpperBound.
+	Column < UpperBound.
 
 % next_player(+CurrentPlayer, -NextPlayer)
 next_player(PrevPlayer, NextPlayer) :-
@@ -72,8 +75,8 @@ next_player(PrevPlayer, NextPlayer) :-
 player_element(0, wt).
 player_element(1, bl).
 
-% push_inline(+FinalIndex, +List, -NewList).
-push_inline(Index, [H | Tail], Solution) :- 
+% push(+FinalIndex, +List, -NewList).
+push(Index, [H | Tail], Solution) :- 
 	push_helper(Index, Tail, Solution, H).
 
 push_helper(0, Sol, [H | Sol], H) :- !.
@@ -83,38 +86,13 @@ push_helper(Index, [empty | Tail], [empty | TailSol], H) :-
 	!, push_helper(NewIndex, Tail, TailSol, H).
 
 push_helper(Index, [Other | Tail], [empty | TailSol], H) :-
-	push_inline(1, [Other | Tail], [_ | NewTail]),
+	push(1, [Other | Tail], [_ | NewTail]),
 	NewIndex is Index - 1,
 	!, push_helper(NewIndex, NewTail, TailSol, H).
 
-push(0, IR, FC, _, Board, NewBoard) :- 
-	push_left(IR, FC, Board, NewBoard).
-
-push(IC, 0, _, FR, [Line | TailBoard], NewBoard) :- 
-	length(Line, Comp),
-	Column is Comp - IC - 1,
-	push_top(Column, FR, [Line | TailBoard], NewBoard).
-
-push(IC, IR, FC, _, [Line | TailBoard], NewBoard) :- 
-	length(Line, Comp),
-	LastColumn is Comp - 1,
-	IC == LastColumn,
-	Index is IC - FC,
-	length([Line | TailBoard], Comp),
-	Row is Comp - IR - 1,
-	push_right(Row, Index, [Line | TailBoard], NewBoard).
-
-push(IC, IR, _, FR, Board, NewBoard) :- 
-	length(Board, Comp),
-	LastRow is Comp - 1,
-	IR == LastRow,
-	Index is IR - FR,
-	write(IC - Index), nl,
-	push_bottom(IC, Index, Board, NewBoard).
-
 push_left(Row, Index, Board, NewBoard) :-
 	nth0(Row, Board, SearchedRow),
-	push_inline(Index, SearchedRow, NewRow),
+	push(Index, SearchedRow, NewRow),
 	replace_row(Row, NewRow, Board, NewBoard).
 
 push_top(Column, Index, Board, NewBoard) :-
