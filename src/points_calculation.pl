@@ -1,9 +1,11 @@
 :- ensure_loaded('utils.pl').
 :- ensure_loaded('board_states.pl').
 
+%points_calculation(+Board, +CurrentDisc, -Points)
 points_calculation(Visited, Disc, MaxPoints):-
-    points_calculation(Visited, Disc, Points, MaxPoints, 0, 0).
+    points_calculation(Visited, Disc, _, MaxPoints, 0, 0).
 
+%points_calculation(+Board, +CurrentDisc, +Points, -MaxPoints, +X, +Y)
 points_calculation(Visited, _, Points, Points, X, Y):-
     \+ getPiece(Visited, X, Y, _),
     YDown is Y + 1,
@@ -42,7 +44,7 @@ points_calculation(Visited, Disc, Points, MaxPoints, X, Y):-
     points_calculation(FinalVisited, Disc, NewMax, MaxPoints, XRight, Y).
 
 
-
+%points_calculation(+Board, -NewBoard,+CurrentDisc, -Points, +X, +Y)
 board_floor(Visited, Visited, _, Points, X, Y):-
     \+ getPiece(Visited, X, Y, _),
     Points is 0.
@@ -68,10 +70,13 @@ board_floor(Visited, NewVisited, Disc, Points, X, Y):-
     pos_points(Elem, Disc, Value),
     Points is RightPoints + LeftPoints + UpPoints + DownPoints + Value.
     
-
+%pos_points(Element, CurrentDisc, -Value)
 pos_points(Elem, Elem, 1).
 pos_points(Elem, Disc, 0):-
     Disc \= Elem.
+
+
+%max_points(Points, CurrentMaxPoints, -MaxPoints)
 max_points(Points, MaxPoints, Points):-
     \+ number(MaxPoints), !.
 max_points(Points, MaxPoints, Points):-
