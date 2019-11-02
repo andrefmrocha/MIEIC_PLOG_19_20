@@ -1,9 +1,6 @@
 :- use_module(library(lists)).
 :- use_module(library(clpfd)).
 
-getPiece(Board, X, Y, Elem):-
-    nth0(X, Board, Line),
-    nth0(Y, Line, Elem).
 secondLast(L, X) :- append(_, [X, _], L).
 
 rotate_board_clockwise(Board, NewBoard, N) :-
@@ -45,7 +42,7 @@ replace_row(Row, NewRow, [H | T], [H | T2]) :-
 	replace_row(NextRow, NewRow, T, T2).
 
 
-get_element_matrix(Row, Column, Element, Matrix) :-
+get_element_matrix(Matrix, Row, Column, Element) :-
 	nth0(Row, Matrix, SearchedRow),
 	nth0(Column, SearchedRow, Element).
 
