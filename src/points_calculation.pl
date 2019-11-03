@@ -8,74 +8,73 @@
 points_calculation(Visited, Disc, MaxPoints):-
     points_calculation(Visited, Disc, _, MaxPoints, 0, 0).
 
-%! points_calculation(+Board, +CurrentDisc, +Points, -MaxPoints, +X, +Y)
+%! points_calculation(+Board, +CurrentDisc, +Points, -MaxPoints, +Y, +X)
 % Calculate the number of points starting off in some coordinates
 % @param Board must be a list of lists
-points_calculation(Visited, _, Points, Points, X, Y):-
-    \+ getPiece(Visited, X, Y, _),
-    YDown is Y + 1,
-    \+ getPiece(Visited, 0, YDown, _).
-points_calculation(Visited, Disc, Points, MaxPoints, X, Y):-
-    \+ getPiece(Visited, X, Y, _),
-    YDown is Y + 1,
-    getPiece(Visited, 0, YDown, Elem),
-    Elem \= nil,
-    points_calculation(Visited, Disc, Points, MaxPoints, 0, YDown).
-points_calculation(Visited, Disc, Points, MaxPoints, X, Y):-
-    getPiece(Visited, X, Y, visited),
-    X1 is X + 1,
-    points_calculation(Visited, Disc, Points, MaxPoints, X1, Y).
-points_calculation(Visited, Disc, Points, MaxPoints, X, Y):-
-    getPiece(Visited, X, Y, Elem),
-    Elem \= Disc,
-    X1 is X + 1,
-    replace_matrix(X, Y, visited, Visited, NewVisited),
-    points_calculation(NewVisited, Disc, Points, MaxPoints, X1, Y).
-points_calculation(Visited, Disc, Points, MaxPoints, X, Y):-
-    getPiece(Visited, X, Y, Elem),
-    Elem \= visited,
+points_calculation(Visited, _, Points, Points, Y, X):-
+    \+ get_element_matrix(Visited, Y, X, _),
     XRight is X + 1,
-    XLeft is X - 1,
+    \+ get_element_matrix(Visited, 0, XRight, _).
+points_calculation(Visited, Disc, Points, MaxPoints, Y, X):-
+    \+ get_element_matrix(Visited, Y, X, _),
+    XRight is X + 1,
+    get_element_matrix(Visited, 0, XRight, Elem),
+    Elem \= nil,
+    points_calculation(Visited, Disc, Points, MaxPoints, 0, XRight).
+points_calculation(Visited, Disc, Points, MaxPoints, Y, X):-
+    get_element_matrix(Visited, Y, X, visited),
+    Y1 is Y + 1,
+    points_calculation(Visited, Disc, Points, MaxPoints, Y1, X).
+points_calculation(Visited, Disc, Points, MaxPoints, Y, X):-
+    get_element_matrix(Visited, Y, X, Elem),
+    Elem \= Disc,
+    Y1 is Y + 1,
+    replace_matrix(Y, X, visited, Visited, NewVisited),
+    points_calculation(NewVisited, Disc, Points, MaxPoints, Y1, X).
+points_calculation(Visited, Disc, Points, MaxPoints, Y, X):-
+    get_element_matrix(Visited, Y, X, Elem),
+    Elem \= visited,
     YDown is Y + 1,
     YUp is Y - 1,
-    replace_matrix(X, Y, visited, Visited, FirstVisited),
-    board_flood(FirstVisited, SecondVisited, Disc, RightPoints, XRight, Y),
-    board_flood(SecondVisited, ThirdVisited, Disc, LeftPoints, XLeft, Y),
-    board_flood(ThirdVisited, FourthVisited, Disc, DownPoints, X, YDown),
-    board_flood(FourthVisited, FinalVisited, Disc, UpPoints, X, YUp),
-    NewPoints is RightPoints + LeftPoints + UpPoints + DownPoints + 1,
+    XRight is X + 1,
+    XLeft is X - 1,
+    replace_matrix(Y, X, visited, Visited, FirstVisited),
+    board_flood(FirstVisited, SecondVisited, Disc, DownPoints, YDown, X),
+    board_flood(SecondVisited, ThirdVisited, Disc, UpPoints, YUp, X),
+    board_flood(ThirdVisited, FourthVisited, Disc, RightPoints, Y, XRight),
+    board_flood(FourthVisited, FinalVisited, Disc, LeftPoints, Y, XLeft),
+    NewPoints is DownPoints + UpPoints + LeftPoints + RightPoints + 1,
     max_points(NewPoints, Points, NewMax),
-    points_calculation(FinalVisited, Disc, NewMax, MaxPoints, XRight, Y).
+    points_calculation(FinalVisited, Disc, NewMax, MaxPoints, YDown, X).
 
 
-%! board_flood(+Board, -NewBoard,+CurrentDisc, -Points, +X, +Y)
+%! board_flood(+Board, -NewBoard,+CurrentDisc, -Points, +Y, +X)
 % Implements a flooding algoritm to calculate the nearby discs 
 % the same type as CurrentDisc.
 % @param Board must be a list of lists
-board_flood(Visited, Visited, _, Points, X, Y):-
-    \+ getPiece(Visited, X, Y, _),
+board_flood(Visited, Visited, _, Points, Y, X):-
+    \+ get_element_matrix(Visited, Y, X, _),
     Points is 0.
-board_flood(Visited, Visited, _, Points, X, Y):-
-    getPiece(Visited, X, Y, visited),
+board_flood(Visited, Visited, _, Points, Y, X):-
+    get_element_matrix(Visited, Y, X, visited),
     Points is 0.
-board_flood(Visited, Visited, Disc, Points, X, Y):-
-    getPiece(Visited, X, Y, Elem),
+board_flood(Visited, Visited, Disc, Points, Y, X):-
+    get_element_matrix(Visited, Y, X, Elem),
     Elem \= Disc,
     Points is 0.
-board_flood(Visited, NewVisited, Disc, Points, X, Y):-
-    getPiece(Visited, X, Y, Elem),
-    Visited \= visited,
-    XRight is X + 1,
-    XLeft is X - 1,
+board_flood(Visited, NewVisited, Disc, Points, Y, X):-
+    get_element_matrix(Visited, Y, X, Elem),
+    Elem \= visited,
     YDown is Y + 1,
     YUp is Y - 1,
-    replace_matrix(X, Y, visited, Visited, FirstNewVisited),
-    board_flood(FirstNewVisited, SecondNewVisited, Disc, RightPoints, XRight, Y),
-    board_flood(SecondNewVisited, ThirdNewVisited, Disc, LeftPoints, XLeft, Y),
-    board_flood(ThirdNewVisited, FourthNewVisited, Disc, DownPoints, X, YDown),
-    board_flood(FourthNewVisited, NewVisited, Disc, UpPoints, X, YUp),
-    pos_points(Elem, Disc, Value),
-    Points is RightPoints + LeftPoints + UpPoints + DownPoints + Value.
+    XRight is X + 1,
+    XLeft is X - 1,
+    replace_matrix(Y, X, visited, Visited, FirstNewVisited),
+    board_flood(FirstNewVisited, SecondNewVisited, Disc, DownPoints, YDown, X),
+    board_flood(SecondNewVisited, ThirdNewVisited, Disc, UpPoints, YUp, X),
+    board_flood(ThirdNewVisited, FourthNewVisited, Disc, RightPoints, Y, XRight),
+    board_flood(FourthNewVisited, NewVisited, Disc, LeftPoints, Y, XLeft),
+    Points is DownPoints + UpPoints + LeftPoints + RightPoints + 1.
     
 
 

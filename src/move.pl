@@ -5,7 +5,7 @@
 
 move(Board, Move, NewBoard, Player) :-
 	[IC, IR, FC, FR] = Move,
-	get_element_matrix(IR, IC, Element, Board),
+	get_element_matrix(Board, IR, IC, Element),
 	player_element(Player, Element),
 	valid_push(IC, IR, FC, FR, Board, ProvNewBoard), %!, % descomentar para só dar T/F
 	replace_matrix(IR, IC, null, ProvNewBoard, NewBoard).
@@ -102,7 +102,7 @@ push_bottom(Column, Index, Board, NewBoard) :-
 	rotate_board_clockwise(NewRotatedBoard, NewBoard, -1).
 	
 inside_board([Line | TBoard], Column, Row) :-
-	get_element_matrix(Row, Column, _, [Line | TBoard]),
+	get_element_matrix([Line | TBoard], Row, Column, _),
 	horizontal_move(Row, Row, [Line | TBoard], _), 
 	vertical_move(Column, Column, Line, _).
 
