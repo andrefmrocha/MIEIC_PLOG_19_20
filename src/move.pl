@@ -1,7 +1,9 @@
 :- use_module(library(random)).
+:- use_module(library(lists)).
 :- ensure_loaded('interface.pl').
 :- ensure_loaded('utils.pl').
 :- ensure_loaded('board_pieces.pl').
+:- ensure_loaded('points_calculation.pl').
 
 move(Board, Move, NewBoard, Player) :-
 	[IC, IR, FC, FR] = Move,
@@ -57,10 +59,21 @@ vertical_move(Column, Column, Line, UpperBound) :-
 	UpperBound is Comp - 1,
 	Column < UpperBound.
 
-% next_player(+CurrentPlayer, -NextPlayer)
-next_player(PrevPlayer, NextPlayer) :-
+% next_player(+CurrentPlayer, -NextPlayer, +GameMode)
+next_player([PrevPlayer, human], NextPlayer, pvp) :-
 	ProvPlayer is PrevPlayer + 1,
-	NextPlayer is mod(ProvPlayer, 2).
+	Player is mod(ProvPlayer, 2),
+	NextPlayer = [Player, human].
+
+next_player([PrevPlayer, human], NextPlayer, pve) :-
+	ProvPlayer is PrevPlayer + 1,
+	Player is mod(ProvPlayer, 2),
+	NextPlayer = [Player, bot].
+
+next_player([PrevPlayer, bot], NextPlayer, pve) :-
+	ProvPlayer is PrevPlayer + 1,
+	Player is mod(ProvPlayer, 2),
+	NextPlayer = [Player, human].
 
 % player_element(Player, Piece).
 player_element(0, wt).
@@ -129,4 +142,29 @@ random_move(Board, Player, Move) :-
 pass_move(Board, Player) :-
 	findall_moves(Board, Player, Moves),
 	Moves == [].
+
+generate_move_points(Board, Player, [IC, IR]-[FC, FR], Points):-
+	move(Board, [IC, IR, FC, FR], NewBoard, Player),
+	player_element(Player, Disc),
+	points_calculation(NewBoard, Disc, Points).
+
+
+greedy_move(Board, Player, Move):-
+	findall_moves(Board, Player, Moves),
+	maplist(generate_move_points(Board, Player), Moves, Scores),
+	max_list(Scores, Max),
+	nth0(Index, Scores, Max),
+	nth0(Index, Moves, Move).
+
 	
+choose_move(Board, [Player, human], NewBoard, _):-
+	read_move(Move, Board),
+	move(Board, Move, NewBoard, Player).
+
+choose_move(Board, [Player, bot], NewBoard, 0):-
+	random_move(Board, Player, [IC, IR]-[FC, FR]),
+	move(Board, [IC, IR, FC, FR], NewBoard, Player).
+
+choose_move(Board, [Player, bot], NewBoard, 1):-
+	greedy_move(Board, Player, [IC, IR]-[FC, FR]),
+	move(Board, [IC, IR, FC, FR], NewBoard, Player).
