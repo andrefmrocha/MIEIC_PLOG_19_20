@@ -45,8 +45,8 @@ empty_board([
 ]).
 
 debug_board([
-    [corner, null, null, corner], %1
-    [null,  empty, empty, null], %2
-    [null, empty, empty, null], %7
-    [corner, null, null, corner]  %8
+    [corner, null, null, null, corner], %1
+    [null, empty, empty, empty, null], %2
+    [null, empty, empty, empty, null], %3
+    [corner, null, null, null, corner]  %4
 ]).

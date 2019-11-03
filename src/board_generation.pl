@@ -3,9 +3,12 @@
 :- ensure_loaded('board_pieces.pl').
 :- ensure_loaded('board_states.pl').
 
-initialize_board(Board, FinalBoard):-
-    generate_pieces(_, Pieces, 24),
-	generate_board(Board, FinalBoard, Pieces).
+initialize_board([Line | TBoard], FinalBoard):-
+	length([Line | TBoard], NRows),
+	length(Line, NColumns),
+	NPieces is (NColumns + NRows - 4) * 2,
+    generate_pieces(_, Pieces, NPieces),
+	generate_board([Line | TBoard], FinalBoard, Pieces).
 
 generate_board(Board, Board, []).
 generate_board([FirstRow | Rest], Final, Pieces) :-

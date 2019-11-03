@@ -25,6 +25,9 @@ parse_move(Input, Move, Board) :-
 % In case the input is empty calls read_move again
 parse_move([], M, B) :- !, read_move(M, B).
 
+% TODO: fazer funcao melhor
+parse_move(['e', 'x', 'i', 't'], _, _) :- write(' Exiting\n'), !, abort.
+
 % In case of invalid input, shows error message and fails (TODO: change to read_move again)
 parse_move(_, M, B) :- write(' Move format is wrong: IC IR FC FR (without spacing)\n'), !, read_move(M, B).
 

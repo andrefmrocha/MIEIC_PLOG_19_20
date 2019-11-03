@@ -21,7 +21,8 @@ move_debug(Player) :-
 
 display_debug :- 
 	clear,
-	empty_board(X),
+	%empty_board(X),
+	debug_board(X),
 	initialize_board(X, Board), !,
 	display_game(Board, 'John Doe').
 
