@@ -64,7 +64,7 @@ board_flood(Visited, Visited, Disc, Points, Y, X):-
     Points is 0.
 board_flood(Visited, NewVisited, Disc, Points, Y, X):-
     get_element_matrix(Visited, Y, X, Elem),
-    Visited \= visited,
+    Elem \= visited,
     YDown is Y + 1,
     YUp is Y - 1,
     XRight is X + 1,
@@ -74,8 +74,7 @@ board_flood(Visited, NewVisited, Disc, Points, Y, X):-
     board_flood(SecondNewVisited, ThirdNewVisited, Disc, UpPoints, YUp, X),
     board_flood(ThirdNewVisited, FourthNewVisited, Disc, RightPoints, Y, XRight),
     board_flood(FourthNewVisited, NewVisited, Disc, LeftPoints, Y, XLeft),
-    pos_points(Elem, Disc, Value),
-    Points is DownPoints + UpPoints + LeftPoints + RightPoints + Value.
+    Points is DownPoints + UpPoints + LeftPoints + RightPoints + 1.
     
 
 

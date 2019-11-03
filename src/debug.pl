@@ -56,5 +56,5 @@ pass_move_debug(Player) :-
 
 points_calculation_debug:-
     final_board(X),
-    points_calculation(X, bl, Points),
+    points_calculation(X, wt, Points),
     write('Points: '), write(Points).
