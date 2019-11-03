@@ -1,3 +1,4 @@
+:- use_module(library(random)).
 :- ensure_loaded('interface.pl').
 :- ensure_loaded('utils.pl').
 :- ensure_loaded('board_pieces.pl').
@@ -115,6 +116,15 @@ findall_moves_helper([[FC, FR] | Remain], Board, Player, Moves, Sol) :-
 findall_moves(Board, Player, Moves) :-
 	findall([FC, FR], inside_board(Board, FC, FR), FinalPos),
 	!, findall_moves_helper(FinalPos, Board, Player, _, Moves).
+
+random_move(Board, Player, Move) :-
+	findall_moves(Board, Player, Moves),
+	length(Moves, NMoves),
+	NMoves > 0,
+	LastIndex is NMoves - 1,
+	random_between(0, LastIndex, RandomIndex),
+	nth0(RandomIndex, Moves, Move).
+
 
 pass_move(Board, Player) :-
 	findall_moves(Board, Player, Moves),

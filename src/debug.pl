@@ -58,3 +58,7 @@ points_calculation_debug:-
     final_board(X),
     points_calculation(X, bl, Points),
     write('Points: '), write(Points).
+
+rand_move_db(Player, Move) :-
+	second_middle_board(X),
+	random_move(X, Player, Move).
