@@ -149,13 +149,33 @@ generate_move_points(Board, Player, [IC, IR]-[FC, FR], Points):-
 	points_calculation(NewBoard, Disc, Points).
 
 
-greedy_move(Board, Player, Move):-
+greedy_move(Player, Board, Move):-
 	findall_moves(Board, Player, Moves),
 	maplist(generate_move_points(Board, Player), Moves, Scores),
 	max_list(Scores, Max),
 	nth0(Index, Scores, Max),
 	nth0(Index, Moves, Move).
 
+get_new_boards(_,  [], [], _).
+get_new_boards(InitialBoard, [[IC, IR]-[FC, FR] | MoveT], [NewBoard | T2], Player):-
+	move(InitialBoard, [IC, IR, FC, FR], NewBoard, Player),
+	get_new_boards(InitialBoard, MoveT, T2, Player).
+
+generate_boards_points(_, [], [], []).
+generate_boards_points(Player, [BoardH | BoardT], [MoveH | MoveT], [NewPoints | T2]):-
+	generate_move_points(BoardH, Player, MoveH, NewPoints),
+	generate_boards_points(Player, BoardT, MoveT, T2).
+
+minimax(Board, Player, Move):-
+	findall_moves(Board, Player, FirstDegreeMoves),
+	get_new_boards(Board, FirstDegreeMoves, FirstDegreeBoards, Player),
+	NextPlayer is Player + 1,
+	Opponent is mod(NextPlayer, 2),
+	maplist(greedy_move(Opponent), FirstDegreeBoards, SecondDegreeMoves),
+	generate_boards_points(Opponent, FirstDegreeBoards, SecondDegreeMoves, SecondDegreePoints),
+	min_list(SecondDegreePoints, MinPoints),
+	nth0(Index, SecondDegreePoints, MinPoints),
+	nth0(Index, FirstDegreeMoves, Move).
 	
 choose_move(Board, [Player, human], NewBoard, _):-
 	read_move(Move, Board),
@@ -166,5 +186,9 @@ choose_move(Board, [Player, bot], NewBoard, 0):-
 	move(Board, [IC, IR, FC, FR], NewBoard, Player).
 
 choose_move(Board, [Player, bot], NewBoard, 1):-
-	greedy_move(Board, Player, [IC, IR]-[FC, FR]),
+	greedy_move(Player, Board , [IC, IR]-[FC, FR]),
+	move(Board, [IC, IR, FC, FR], NewBoard, Player).
+
+choose_move(Board, [Player, bot], NewBoard, 2):-
+	minimax(Board, Player , [IC, IR]-[FC, FR]),
 	move(Board, [IC, IR, FC, FR], NewBoard, Player).

@@ -8,7 +8,7 @@ start_game :-
 	% TODO: por rand seed
 	empty_board(EB),
 	initialize_board(EB, BeginBoard),
-	game_loop(BeginBoard, [0, human], pve, 1).
+	game_loop(BeginBoard, [0, bot], pve, 2).
 
 % finish
 game_loop(Board, _, _, _) :- 
