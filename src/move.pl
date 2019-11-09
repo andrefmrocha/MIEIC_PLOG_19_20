@@ -171,29 +171,31 @@ generate_boards_points(Player, [BoardH | BoardT], [MoveH | MoveT], [NewPoints | 
 	generate_move_points(BoardH, Player, MoveH, NewPoints, _),
 	generate_boards_points(Player, BoardT, MoveT, T2).
 
-get_best_move_points(Opponent, Player, Board, [], PointsDifference):-
+get_best_move_points(Opponent, Player, Board, [], OpponentPoints, PlayerPoints):-
 	player_element(Opponent, OpponentDisc),
 	player_element(Player, PlayerDisc),
 	points_calculation(Board, OpponentDisc, OpponentPoints),
-	points_calculation(Board, PlayerDisc, PlayerPoints),
-	PointsDifference is PlayerPoints - OpponentPoints.
-get_best_move_points(Opponent, Player, Board, Moves, PointsDifference):-
+	points_calculation(Board, PlayerDisc, PlayerPoints).
+get_best_move_points(Opponent, Player, Board, Moves, OpponentPoints, PlayerPoints):-
 	get_best_move(Opponent, Board, Moves, Move),
 	generate_move_points(Board, Opponent, Move, OpponentPoints, NewBoard),
 	player_element(Player, PlayerDisc),
-	points_calculation(NewBoard, PlayerDisc, PlayerPoints),
-	PointsDifference is PlayerPoints - OpponentPoints.
+	points_calculation(NewBoard, PlayerDisc, PlayerPoints).
 
-generate_board_points(Opponent, Player, Board, PointsDifference):-
+generate_board_points(Opponent, Player, Board, OpponentPoints, PlayerPoints):-
 	findall_moves(Board, Opponent, Moves),
-	get_best_move_points(Opponent, Player, Board, Moves, PointsDifference).
+	get_best_move_points(Opponent, Player, Board, Moves, OpponentPoints, PlayerPoints).
+
+difference(PlayerPoints, OpponentPoints, PointsDifference):-
+	PointsDifference is PlayerPoints - OpponentPoints.
 
 minimax(Board, Player, Move):-
 	findall_moves(Board, Player, FirstDegreeMoves),
 	get_new_boards(Board, FirstDegreeMoves, FirstDegreeBoards, Player),
 	NextPlayer is Player + 1,
 	Opponent is mod(NextPlayer, 2),
-	maplist(generate_board_points(Opponent, Player), FirstDegreeBoards, PointsDifference),
+	maplist(generate_board_points(Opponent, Player), FirstDegreeBoards, OpponentPoints, PlayerPoints),
+	maplist(difference, PlayerPoints, OpponentPoints, PointsDifference),
 	max_list(PointsDifference, MaxDifference),
 	nth0(Index, PointsDifference, MaxDifference),
 	nth0(Index, FirstDegreeMoves, Move).
