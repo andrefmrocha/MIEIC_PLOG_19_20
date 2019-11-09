@@ -59,21 +59,22 @@ vertical_move(Column, Column, Line, UpperBound) :-
 	UpperBound is Comp - 1,
 	Column < UpperBound.
 
-% next_player(+CurrentPlayer, -NextPlayer, +GameMode)
-next_player([PrevPlayer, human], NextPlayer, pvp) :-
+% next_player(+CurrentPlayer, -NextPlayer, +GameMode, +PrevDifficulty, -NewDifficulty)
+next_player([PrevPlayer, human], [Player, human], pvp, _, _) :-
 	ProvPlayer is PrevPlayer + 1,
-	Player is mod(ProvPlayer, 2),
-	NextPlayer = [Player, human].
+	Player is mod(ProvPlayer, 2).
 
-next_player([PrevPlayer, human], NextPlayer, pve) :-
+next_player([PrevPlayer, human], [Player, bot], pvb, PD - BD, BD - PD) :-
 	ProvPlayer is PrevPlayer + 1,
-	Player is mod(ProvPlayer, 2),
-	NextPlayer = [Player, bot].
+	Player is mod(ProvPlayer, 2).
 
-next_player([PrevPlayer, bot], NextPlayer, pve) :-
+next_player([PrevPlayer, bot], [Player, human], pvb, BD - PD, PD - BD) :-
 	ProvPlayer is PrevPlayer + 1,
-	Player is mod(ProvPlayer, 2),
-	NextPlayer = [Player, human].
+	Player is mod(ProvPlayer, 2).
+
+next_player([PrevPlayer, bot], [Player, bot], bvb, B1D - B2D, B2D - B1D) :-
+	ProvPlayer is PrevPlayer + 1,
+	Player is mod(ProvPlayer, 2).
 
 % player_element(Player, Piece).
 player_element(0, wt).
@@ -140,8 +141,7 @@ random_move(Board, Player, Move) :-
 
 
 pass_move(Board, Player) :-
-	findall_moves(Board, Player, Moves),
-	Moves == [].
+	findall_moves(Board, Player, []).
 
 generate_move_points(Board, Player, [IC, IR]-[FC, FR], Points):-
 	move(Board, [IC, IR, FC, FR], NewBoard, Player),
@@ -181,14 +181,14 @@ choose_move(Board, [Player, human], NewBoard, _):-
 	read_move(Move, Board),
 	move(Board, Move, NewBoard, Player).
 
-choose_move(Board, [Player, bot], NewBoard, 0):-
+choose_move(Board, [Player, bot], NewBoard, 0 - _):-
 	random_move(Board, Player, [IC, IR]-[FC, FR]),
 	move(Board, [IC, IR, FC, FR], NewBoard, Player).
 
-choose_move(Board, [Player, bot], NewBoard, 1):-
+choose_move(Board, [Player, bot], NewBoard, 1 - _):-
 	greedy_move(Player, Board , [IC, IR]-[FC, FR]),
 	move(Board, [IC, IR, FC, FR], NewBoard, Player).
 
-choose_move(Board, [Player, bot], NewBoard, 2):-
+choose_move(Board, [Player, bot], NewBoard, 2 - _):-
 	minimax(Board, Player , [IC, IR]-[FC, FR]),
 	move(Board, [IC, IR, FC, FR], NewBoard, Player).

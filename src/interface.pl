@@ -13,13 +13,11 @@ read_move(Move, Board):-
 
 % parse_move(-Input, +Move, -Board) - tests the length of the input and calls @valid_move_input to validate the input
 parse_move(Input, Move, Board) :-
-	length(Input, Comp),
-	Comp == 4,
+	length(Input, 4),
 	valid_move_input(Input, Move, Board).
 
 parse_move(Input, Move, Board) :-
-	length(Input, Comp),
-	Comp == 4,
+	length(Input, 4),
 	valid_move_input(Input, _, Board), !, read_move(Move, Board).
 
 % In case the input is empty calls read_move again
@@ -49,9 +47,7 @@ valid_column_input(Input, ColumnNumber, BoardLine) :-
 	ColumnNumber < Comp.
 
 valid_row_input(Input, RowNumber, Board) :-
-	char_code(Input, CodeR),
-	cc0(CC0),
-	RowNumber is CodeR - CC0,
+	atom_number(Input, RowNumber),
 	RowNumber >= 0,
 	length(Board, Comp),
 	RowNumber < Comp.
@@ -61,3 +57,37 @@ read_string(CharList) :-
     read_line_to_codes(Input, Codes),
     string_codes(String, Codes),
 	atom_chars(String, CharList).
+
+read_menu(Option, Type):-
+    write(' Option: '),
+    read_string(Input), 
+    parse_menu(Input, Option, Type).
+
+% parse_menu([Input | []], Int, NOptions) :- 
+% 	atom_number(Input, Int),
+% 	Int =< NOptions.
+
+parse_menu(['0' | []], _, main) :- write(' Exiting\n'), abort.
+parse_menu(['1' | []], pvp, main).
+parse_menu(['2' | []], pvb, main).
+parse_menu(['3' | []], bvb, main).
+parse_menu(['4' | []], _, main) :- display_instructions.
+
+parse_menu(['0' | []], back, bot).
+parse_menu(['1' | []], 0, bot).
+parse_menu(['2' | []], 1, bot).
+parse_menu(['3' | []], 2, bot).
+
+parse_menu(['0' | []], back, order).
+parse_menu(['1' | []], human, order).
+parse_menu(['2' | []], bot, order).
+
+parse_menu([], O, Type) :- !, read_menu(O, Type).
+parse_menu(_, O, Type) :- 
+	noptions(Type, NOptions),
+	write(' Invalid Menu Option (choose a number from 0 to ' ), write(NOptions) , write(')\n'), 
+	!, read_menu(O, Type).
+
+noptions(main, 4).
+noptions(bot, 3).
+noptions(order, 2).

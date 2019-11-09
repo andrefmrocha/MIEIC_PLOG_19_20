@@ -14,6 +14,11 @@ tl :- ansi_format([fg(cyan)], '~c', [9571]). % ╣ : T left
 td :- ansi_format([fg(cyan)], '~c', [9574]). % ╦ : T down
 tu :- ansi_format([fg(cyan)], '~c', [9577]). % ╩ : T up
 
+% TODO: mudar cores
+tr_oneline :- ansi_format([fg(cyan)], '~c', [9567]). % ╟ : T right one line
+tl_oneline :- ansi_format([fg(cyan)], '~c', [9570]). % ╢ : T left one line
+
+
 wt:- ansi_format([bold, fg(white)], '~c', [11044]), write(' '). % White piece
 bl:- ansi_format([bold, fg(black)], '~c', [11044]), write(' '). % Black piece
 null:- write('  '). % Null space
