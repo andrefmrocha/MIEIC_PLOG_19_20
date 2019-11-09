@@ -149,34 +149,49 @@ generate_move_points(Board, Player, [IC, IR]-[FC, FR], Points):-
 	points_calculation(NewBoard, Disc, Points).
 
 
-greedy_move(Player, Board, Move):-
-	findall_moves(Board, Player, Moves),
+get_best_move(Player, Board, Moves, Move):-
 	maplist(generate_move_points(Board, Player), Moves, Scores),
 	max_list(Scores, Max),
 	nth0(Index, Scores, Max),
 	nth0(Index, Moves, Move).
+
+greedy_move(Player, Board, Move):-
+	findall_moves(Board, Player, Moves),
+	get_best_move(Player, Board, Moves, Move).
+
 
 get_new_boards(_,  [], [], _).
 get_new_boards(InitialBoard, [[IC, IR]-[FC, FR] | MoveT], [NewBoard | T2], Player):-
 	move(InitialBoard, [IC, IR, FC, FR], NewBoard, Player),
 	get_new_boards(InitialBoard, MoveT, T2, Player).
 
+% Currently unused but may be useful for a next iteration of minimax
 generate_boards_points(_, [], [], []).
 generate_boards_points(Player, [BoardH | BoardT], [MoveH | MoveT], [NewPoints | T2]):-
 	generate_move_points(BoardH, Player, MoveH, NewPoints),
 	generate_boards_points(Player, BoardT, MoveT, T2).
+
+get_best_move_points(Player, Board, [], Points):-
+	player_element(Player, Disc),
+	points_calculation(Board, Disc, Points).
+get_best_move_points(Player, Board, Moves, Points):-
+	get_best_move(Player, Board, Moves, Move),
+	generate_move_points(Board, Player, Move, Points).
+
+generate_board_points(Player, Board, Points):-
+	findall_moves(Board, Player, Moves),
+	get_best_move_points(Player, Board, Moves, Points).
 
 minimax(Board, Player, Move):-
 	findall_moves(Board, Player, FirstDegreeMoves),
 	get_new_boards(Board, FirstDegreeMoves, FirstDegreeBoards, Player),
 	NextPlayer is Player + 1,
 	Opponent is mod(NextPlayer, 2),
-	maplist(greedy_move(Opponent), FirstDegreeBoards, SecondDegreeMoves),
-	generate_boards_points(Opponent, FirstDegreeBoards, SecondDegreeMoves, SecondDegreePoints),
+	maplist(generate_board_points(Opponent), FirstDegreeBoards, SecondDegreePoints),
 	min_list(SecondDegreePoints, MinPoints),
 	nth0(Index, SecondDegreePoints, MinPoints),
 	nth0(Index, FirstDegreeMoves, Move).
-	
+
 choose_move(Board, [Player, human], NewBoard, _):-
 	read_move(Move, Board),
 	move(Board, Move, NewBoard, Player).
