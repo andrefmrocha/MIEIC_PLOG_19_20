@@ -189,16 +189,25 @@ generate_board_points(Opponent, Player, Board, OpponentPoints, PlayerPoints):-
 difference(PlayerPoints, OpponentPoints, PointsDifference):-
 	PointsDifference is PlayerPoints - OpponentPoints.
 
-minimax(Board, Player, Move):-
+minimax_with_difference(FirstDegreeMoves, PlayerPoints, OpponentPoints, Move):-
+	maplist(difference, PlayerPoints, OpponentPoints, PointsDifference),
+	max_list(PointsDifference, MaxDifference),
+	nth0(Index, PointsDifference, MaxDifference),
+	nth0(Index, FirstDegreeMoves, Move).
+
+minimax_worst_play(FirstDegreeMoves, _, OpponentPoints, Move):-
+	min_list(OpponentPoints, WorstPoints),
+	nth0(Index, OpponentPoints, WorstPoints),
+	nth0(Index, FirstDegreeMoves, Move).
+
+minimax(Board, Player, Func, Move):-
 	findall_moves(Board, Player, FirstDegreeMoves),
 	get_new_boards(Board, FirstDegreeMoves, FirstDegreeBoards, Player),
 	NextPlayer is Player + 1,
 	Opponent is mod(NextPlayer, 2),
 	maplist(generate_board_points(Opponent, Player), FirstDegreeBoards, OpponentPoints, PlayerPoints),
-	maplist(difference, PlayerPoints, OpponentPoints, PointsDifference),
-	max_list(PointsDifference, MaxDifference),
-	nth0(Index, PointsDifference, MaxDifference),
-	nth0(Index, FirstDegreeMoves, Move).
+	Pred=..[Func, FirstDegreeMoves, PlayerPoints, OpponentPoints, Move],
+	Pred.
 
 choose_move(Board, [Player, human], NewBoard, _):-
 	read_move(Move, Board),
@@ -213,5 +222,5 @@ choose_move(Board, [Player, bot], NewBoard, 1 - _):-
 	move(Board, [IC, IR, FC, FR], NewBoard, Player).
 
 choose_move(Board, [Player, bot], NewBoard, 2 - _):-
-	minimax(Board, Player , [IC, IR]-[FC, FR]),
+	minimax(Board, Player , minimax_with_difference, [IC, IR]-[FC, FR]),
 	move(Board, [IC, IR, FC, FR], NewBoard, Player).
