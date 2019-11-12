@@ -86,4 +86,6 @@ max_points(Points, MaxPoints, Points):-
 max_points(_, MaxPoints, MaxPoints).
 
 
-
+get_player_points(Player, Board, PlayerPoints):-
+	select_piece(Player, PlayerDisc),
+	points_calculation(Board, PlayerDisc, PlayerPoints).
