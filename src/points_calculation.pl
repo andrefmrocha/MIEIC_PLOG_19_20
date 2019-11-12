@@ -90,5 +90,5 @@ max_points(_, MaxPoints, MaxPoints).
 % Obtains the number of points a given Player has in the given
 % Board. Stores that value on PlayerPoints 
 get_player_points(Player, Board, PlayerPoints):-
-	player_element(Player, PlayerDisc),
+	select_piece(Player, PlayerDisc),
 	points_calculation(Board, PlayerDisc, PlayerPoints).

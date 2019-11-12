@@ -12,7 +12,7 @@
 
 move(Board, [IC, IR, FC, FR], NewBoard, Player) :-
 	get_element_matrix(Board, IR, IC, Element),
-	player_element(Player, Element),
+	select_piece(Player, Element),
 	valid_push(IC, IR, FC, FR, Board, ProvNewBoard), %!, % descomentar para só dar T/F
 	replace_matrix(IR, IC, null, ProvNewBoard, NewBoard).
 
@@ -104,11 +104,6 @@ next_player([PrevPlayer, bot], [Player, human], pvb, BD - PD, PD - BD) :-
 next_player([PrevPlayer, bot], [Player, bot], bvb, B1D - B2D, B2D - B1D) :-
 	ProvPlayer is PrevPlayer + 1,
 	Player is mod(ProvPlayer, 2).
-
-%! player_element(+Player, -Piece)
-% Determines which Piece is a assigned to a given Player
-player_element(0, wt).
-player_element(1, bl).
 
 %! push(+FinalIndex, +Board, -NewBoard)
 % Attempts to actually push the given Board position.
@@ -210,9 +205,9 @@ pass_move(Board, Player) :-
 % Generates a given move points for both the Player as well as the opponent
 generate_move_points(Board, Player, Opponent, [IC, IR]-[FC, FR], PlayerPoints, OpponentPoints):-
 	move(Board, [IC, IR, FC, FR], NewBoard, Player),
-	player_element(Player, PlayerDisc),
+	select_piece(Player, PlayerDisc),
 	points_calculation(NewBoard, PlayerDisc, PlayerPoints),
-	player_element(Opponent, OpponentDisc),
+	select_piece(Opponent, OpponentDisc),
 	points_calculation(NewBoard, OpponentDisc, OpponentPoints).
 
 %! get_best_with_difference(+Moves, +PlayerPoints, +OpponentPoints, -Move)
@@ -258,8 +253,8 @@ get_new_boards(InitialBoard, [[IC, IR]-[FC, FR] | MoveT], [NewBoard | T2], Playe
 %! get_best_move_points(+Opponent, +Player, +Board, +Moves, -OpponentPoints, -PlayerPoints)
 % Using a greedy approach, gets the best move OpponentPoints and PlayerPoints.
 get_best_move_points(Opponent, Player, Board, [], OpponentPoints, PlayerPoints):-
-	player_element(Opponent, OpponentDisc),
-	player_element(Player, PlayerDisc),
+	select_piece(Opponent, OpponentDisc),
+	select_piece(Player, PlayerDisc),
 	points_calculation(Board, OpponentDisc, OpponentPoints),
 	points_calculation(Board, PlayerDisc, PlayerPoints).
 get_best_move_points(Opponent, Player, Board, Moves, OpponentPoints, PlayerPoints):-
