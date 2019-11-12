@@ -62,3 +62,20 @@ choose_order(Option) :-
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,
 	llc, write_line(46, '═', cyan), lrc, nl,
 	read_menu(Option, order), !.
+
+
+% display_logo :-
+% ███████╗██╗   ██╗███████╗███████╗
+% ██╔════╝██║   ██║██╔════╝██╔════╝
+% █████╗  ██║   ██║███████╗█████╗  
+% ██╔══╝  ██║   ██║╚════██║██╔══╝  
+% ██║     ╚██████╔╝███████║███████╗
+% ╚═╝      ╚═════╝ ╚══════╝╚══════╝
+
+display_logo:-
+	write('   '), logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, logo_sq, logo_sq, urc, write('   '),logo_sq, logo_sq, urc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc,  nl,
+	write('   '), logo_sq, logo_sq, ulc, hdiv, hdiv, lrc, logo_sq, logo_sq, vdiv, write('   '),logo_sq, logo_sq, vdiv, logo_sq, logo_sq, ulc, hdiv, hdiv, lrc, logo_sq, logo_sq, ulc, hdiv, hdiv, lrc, nl,
+	write('   '), logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, write('  '),logo_sq, logo_sq, vdiv, write('   '),logo_sq, logo_sq, vdiv, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, nl,
+	write('   '), logo_sq, logo_sq, ulc, hdiv, lrc, write('  '),logo_sq, logo_sq, vdiv, write('   '),logo_sq, logo_sq, vdiv, llc, hdiv, hdiv, logo_sq, logo_sq, vdiv, logo_sq, logo_sq, ulc, hdiv, lrc, nl,
+	write('   '), logo_sq, logo_sq, vdiv, write('     '),llc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, ulc, lrc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, vdiv, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, nl,
+	write('   '), llc, halfhdiv, lrc, write('      '),llc, hdiv, hdiv, halfhdiv, lrc, write(' '),llc, hdiv, hdiv, hdiv, lrc, llc, hdiv, hdiv, hdiv, lrc,  nl.
