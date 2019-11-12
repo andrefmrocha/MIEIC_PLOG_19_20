@@ -16,21 +16,23 @@ init_game(pvb, DifficultyTuple, FirstPlayer) :-
 	order_difficulty(FirstPlayer, Difficulty, DifficultyTuple).
 
 init_game(bvb, Difficulty1 - Difficulty2, bot) :- 
-	display_bot_menu('1 ', Difficulty1), !,
+	display_bot_menu('1 ', Difficulty1),!,
 	display_bot_menu('2 ', Difficulty2), !,
 	write('Bot vs Bot').
+
+init_game(_, _, _):-
+	!, start_game.
 
 initial(GameMode, Difficulty, FirstPlayer) :-
 	display_menu(GameMode),
 	init_game(GameMode, Difficulty, FirstPlayer).
 
+play:-
+	start_game,
+	play.
+
 start_game :-
-	display_menu(GameMode),
-	init_game(GameMode, Difficulty, FirstPlayer),
-	% TODO: mudar para perguntar por coordenadas
-	initialize_empty_board(6, 6, EB),
-	initialize_board(EB, BeginBoard),
-	!, game_loop(BeginBoard, [0, FirstPlayer], GameMode, Difficulty, 0).
+	menu_option(main).
 
 % finish
 game_loop(Board, [Player, _], _, _, 2) :- 
@@ -39,7 +41,8 @@ game_loop(Board, [Player, _], _, _, 2) :-
 	points_calculation(Board, wt, Points0),
     write('Player 0 Points : '), write(Points0), nl,
     points_calculation(Board, bl, Points1),
-    write('Player 1 Points : '), write(Points1), nl, !.
+    write('Player 1 Points : '), write(Points1), nl, !,
+	write('Press any key to continue'), get_char(_).
 
 game_loop(Board, [Player, Type], GameMode, Difficulty, _) :-
 	\+ pass_move(Board, Player),

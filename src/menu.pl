@@ -11,57 +11,105 @@ write_center(LineSize, Content, Stuffer, Color):-
 display_menu(Option) :-
 	clear,
 	ulc, write_line(50, '═', cyan), urc, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	vdiv, write_center(46, 'FUSE', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	tr_oneline, write_line(46, '-', black), tl_oneline, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '1: Human vs Human', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '2: Human vs Bot ', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '3: Bot   vs Bot ', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '4: Instructions ', ' ', green), vdiv, nl,
-	vdiv, write_center(46, '0: Exit         ', ' ', red), vdiv, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	llc, write_line(46, '═', cyan), lrc, nl,
-	read_menu(Option, main), !.
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, 'FUSE', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	tr_oneline, write_line(50, '-', black), tl_oneline, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '1: Human vs Human', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '2: Human vs Bot ', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '3: Bot   vs Bot ', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '4: Instructions ', ' ', green), vdiv, nl,
+	vdiv, write_center(50, '0: Exit         ', ' ', red), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	llc, write_line(50, '═', cyan), lrc, nl,
+	read_menu(Option, main).
 
 display_bot_menu(BotNumber, Option) :-
 	clear,
 	ulc, write_line(50, '═', cyan), urc, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
 	atom_concat('Bot ', BotNumber, ProvString), atom_concat(ProvString, 'Level', Title),
-	vdiv, write_center(46, Title, ' ', white), vdiv, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	tr_oneline, write_line(46, '-', black), tl_oneline, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '1: Random Bot', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '2: Greedy Bot', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '3: MinMax Bot', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '0: Back      ', ' ', red), vdiv, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	llc, write_line(46, '═', cyan), lrc, nl,
-	read_menu(Option, bot), !.
+	vdiv, write_center(50, Title, ' ', white), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	tr_oneline, write_line(50, '-', black), tl_oneline, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '1: Random Bot', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '2: Greedy Bot', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '3: MinMax Bot', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '0: Back      ', ' ', red), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	llc, write_line(50, '═', cyan), lrc, nl,
+	read_menu(Option, bot),!.
 
 choose_order(Option) :-
 	clear, 
 	ulc, write_line(50, '═', cyan), urc, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	vdiv, write_center(46, 'Choose Who Goes First', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	tr_oneline, write_line(46, '-', black), tl_oneline, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '1: Player', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '2: Bot   ', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '0: Back  ', ' ', red), vdiv, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	llc, write_line(46, '═', cyan), lrc, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, 'Choose Who Goes First', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	tr_oneline, write_line(50, '-', black), tl_oneline, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '1: Player', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '2: Bot   ', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '0: Back  ', ' ', red), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	llc, write_line(50, '═', cyan), lrc, nl,
 	read_menu(Option, order), !.
+
+
+
+% state_machine(Type, State, NextState).
+state_machine(exit, _):- write(' Exiting\n'), abort.
+state_machine(pvp, pvp).
+state_machine(pvp, main).
+
+interpret_decision(back, _).
+interpret_decision(Difficulty, pvb):-
+	choose_order(FirstPlayer), !,
+	interpret_decision(Difficulty, FirstPlayer, pvb).
+interpret_decision(Difficulty1, bvb):-
+	display_bot_menu('2 ', Difficulty2), !,
+	interpret_decision(Difficulty1, Difficulty2, bvb).
+	
+interpret_decision(_, back, _).
+interpret_decision(Difficulty, FirstPlayer, pvb):-
+	order_difficulty(FirstPlayer, Difficulty, DifficultyTuple),  !,
+	menu_option(game, pvb, DifficultyTuple, FirstPlayer).
+interpret_decision(Difficulty1, Difficulty2, bvb):-
+	write('Bot vs Bot'), !,
+	menu_option(game, bvb, Difficulty1 - Difficulty2, bot).
+
+% menu_option(State, GameMode, Difficulty, FirstPlayer):-
+menu_option(main):-
+	display_menu(Option),
+	menu_option(Option).
+menu_option(instructions):-
+	display_instructions,
+	get_char(_).
+menu_option(back).
+menu_option(exit):-
+	write('Bye'),
+	abort.
+menu_option(pvb) :- 
+	display_bot_menu('', Difficulty),
+	interpret_decision(Difficulty, pvb).
+menu_option(bvb) :- 
+	display_bot_menu('1 ', Difficulty),!,
+	interpret_decision(Difficulty, bvb).
+menu_option(game, GameMode, Difficulty, FirstPlayer):-
+	initialize_empty_board(3, 3, EB),
+	initialize_board(EB, BeginBoard),
+	!, game_loop(BeginBoard, [0, FirstPlayer], GameMode, Difficulty, 0).
+menu_option(GameMode, GameMode, Difficulty, FirstPlayer):-
+	init_game(GameMode, Difficulty, FirstPlayer).
+
 
 
 % display_logo :-
@@ -82,30 +130,30 @@ display_logo:-
 
 display_instructions :-
 	clear,
-	ulc, write_line(46, '═', cyan), urc, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	vdiv, write_center(46, 'Instructions', ' ', green), vdiv, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	tr_oneline, write_line(46, '-', black), tl_oneline, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	vdiv, write_center(46, 'Welcome to Fuse', ' ', white), vdiv, nl,	
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	vdiv, write_center(46, 'Your objective is to make', ' ', white), vdiv, nl,
-	vdiv, write_center(46, 'the BIGGEST isle', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	vdiv, write_center(46, 'Move your pieces from the', ' ', white), vdiv, nl,	
-	vdiv, write_center(46, 'periphery to the center', ' ', white), vdiv, nl,
-	vdiv, write_center(46, 'pushing other pieces around', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	vdiv, write_center(46, 'Move format: IC IR FC FR', ' ', white), vdiv, nl,	
-	vdiv, write_center(46, '(I: Initial; F: Final)', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '(C: Column ; R: Row  )', ' ', white), vdiv, nl,
-	vdiv, write_center(46, 'WITHOUT SPACES', ' ', red), vdiv, nl,
-	vdiv, write_center(46, 'Ex: a1b2', ' ', green), vdiv, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	vdiv, write_center(46, '0: Back  ', ' ', red), vdiv, nl,
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	vdiv, write_center(46, '', ' ', white), vdiv, nl,
-	llc, write_line(46, '═', cyan), lrc, nl.
+	ulc, write_line(50, '═', cyan), urc, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, 'Instructions', ' ', green), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	tr_oneline, write_line(50, '-', black), tl_oneline, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, 'Welcome to Fuse', ' ', white), vdiv, nl,	
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, 'Your objective is to make', ' ', white), vdiv, nl,
+	vdiv, write_center(50, 'the BIGGEST isle', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	vdiv, write_center(50, 'Move your pieces from the', ' ', white), vdiv, nl,	
+	vdiv, write_center(50, 'periphery to the center', ' ', white), vdiv, nl,
+	vdiv, write_center(50, 'pushing other pieces around', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, 'Move format: IC IR FC FR', ' ', white), vdiv, nl,	
+	vdiv, write_center(50, '(I: Initial; F: Final)', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '(C: Column ; R: Row  )', ' ', white), vdiv, nl,
+	vdiv, write_center(50, 'WITHOUT SPACES', ' ', red), vdiv, nl,
+	vdiv, write_center(50, 'Ex: a1b2', ' ', green), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, '0: Back  ', ' ', red), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	llc, write_line(50, '═', cyan), lrc, nl.
