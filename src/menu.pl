@@ -1,13 +1,40 @@
 :- ensure_loaded('interface.pl').
 :- ensure_loaded('board_pieces.pl').
 
+% TODO: ver LineSize pq n é bem o tamanho da linha
+
+%! write_line(+LineSize, +Char, +Color).
+% Writes line with Char (character) in the desired Color with the LineSize decided
+% Uses @see write_center
 write_line(LineSize, Char, Color) :-
 	write_center(LineSize, Char, Char, Color).
 
+%! write_center(+LineSize, +Content, +Stuffer, +Color)
+% Writes centered in a line with size LineSize, the Content with the desired Color (in ANSI format)
+% The line is centered with the Stuffer char in equal amount on either side of the Content
 write_center(LineSize, Content, Stuffer, Color):-
 	char_code(Stuffer, StufferCode),
 	ansi_format([fg(Color), bold],'~*t~s~*t~*|', [StufferCode, Content, StufferCode, LineSize]).
 
+%! display_menu(-Option)
+% Clears screens and draws logo by calling @see display_logo and menu like the one shown below
+% Allows the user to choose between 3 Game Modes (Human vs Human; Human vs Bot; Bot vs Bot)
+% ╔═════════════════════════════════╗
+% ║                                 ║
+% ║        Choose Game Mode         ║
+% ║                                 ║
+% ╟---------------------------------╢
+% ║                                 ║
+% ║                                 ║
+% ║        1: Human vs Human        ║
+% ║        2: Human vs Bot          ║
+% ║        3: Bot   vs Bot          ║
+% ║        4: Instructions          ║
+% ║        0: Exit                  ║
+% ║                                 ║
+% ║                                 ║
+% ╚═════════════════════════════════╝
+% Asks for an option using @see read_menu and returns it using the argument Option
 display_menu(Option) :-
 	clear,
 	display_logo,
@@ -28,6 +55,27 @@ display_menu(Option) :-
 	llc, write_line(50, '═', cyan), lrc, nl,
 	read_menu(Option, main).
 
+% TODO: update
+%! display_bot_menu(+BotNumber, -Option)
+% Clears screen and draws menu like the one shown below
+% Allows the user to choose the Bot Level making it use a different algorithm (Random, Greedy or MinMax)
+% with different heuristics to evaluate the moves (biggest isle vs difference between the biggest isles)
+% ╔═════════════════════════════════╗
+% ║                                 ║
+% ║           Bot X Level           ║
+% ║                                 ║
+% ╟---------------------------------╢
+% ║                                 ║
+% ║                                 ║
+% ║          1: Random Bot          ║
+% ║          2: Greedy Bot          ║
+% ║          3: MinMax Bot          ║
+% ║          0: Back                ║
+% ║                                 ║
+% ║                                 ║
+% ╚═════════════════════════════════╝
+% Value of X depends on the BotNumber, and allows to use the same menu in different cases
+% The option chosen with @see read_menu is returned by the argument Option
 display_bot_menu(BotNumber, Option) :-
 	clear,
 	ulc, write_line(50, '═', cyan), urc, nl,
@@ -47,6 +95,23 @@ display_bot_menu(BotNumber, Option) :-
 	llc, write_line(50, '═', cyan), lrc, nl,
 	read_menu(Option, bot),!.
 
+%! choose_order(-Option)
+% Clears Screen and draws menu like the one shown below 
+% Allows the user to choose who goes first in the player vs bot Game Mode
+% ╔═════════════════════════════════╗
+% ║                                 ║
+% ║      Choose Who Goes First      ║
+% ║                                 ║
+% ╟---------------------------------╢
+% ║                                 ║
+% ║                                 ║
+% ║            1: Player            ║
+% ║            2: Bot               ║
+% ║            0: Back              ║
+% ║                                 ║
+% ║                                 ║
+% ╚═════════════════════════════════╝
+% The option chosen with @see read_menu is returned by the argument Option
 choose_order(Option) :-
 	clear, 
 	ulc, write_line(50, '═', cyan), urc, nl,
@@ -64,13 +129,7 @@ choose_order(Option) :-
 	llc, write_line(50, '═', cyan), lrc, nl,
 	read_menu(Option, order), !.
 
-
-
-% state_machine(Type, State, NextState).
-state_machine(exit, _):- write(' Exiting\n'), abort.
-state_machine(pvp, pvp).
-state_machine(pvp, main).
-
+% TODO: comentar
 interpret_decision(back, _).
 interpret_decision(Difficulty, pvb):-
 	choose_order(FirstPlayer), !,
@@ -78,7 +137,8 @@ interpret_decision(Difficulty, pvb):-
 interpret_decision(Difficulty1, bvb):-
 	display_bot_menu('2 ', Difficulty2), !,
 	interpret_decision(Difficulty1, Difficulty2, bvb).
-	
+
+% TODO: comentar
 interpret_decision(_, back, _).
 interpret_decision(Difficulty, FirstPlayer, pvb):-
 	order_difficulty(FirstPlayer, Difficulty, DifficultyTuple),  !,
@@ -86,7 +146,7 @@ interpret_decision(Difficulty, FirstPlayer, pvb):-
 interpret_decision(Difficulty1, Difficulty2, bvb):-
 	!, menu_option(game, bvb, Difficulty1 - Difficulty2, bot).
 
-% menu_option(State, GameMode, Difficulty, FirstPlayer):-
+% TODO: comentar
 menu_option(main):-
 	display_menu(Option),
 	menu_option(Option).
@@ -105,6 +165,9 @@ menu_option(bvb) :-
 	interpret_decision(Difficulty, bvb).
 menu_option(pvp) :- 
 	menu_option(game, pvp, _, _).
+
+% TODO: comentar
+% menu_option(State, GameMode, Difficulty, FirstPlayer):-
 menu_option(game, GameMode, Difficulty, FirstPlayer):-
 	read_dimension(Rows, 'Rows'),
 	read_dimension(Columns, 'Columns'), nl,
@@ -114,14 +177,14 @@ menu_option(game, GameMode, Difficulty, FirstPlayer):-
 
 
 
-% display_logo :-
+%! display_logo
+% Displays Logo as shown below in 2 different colors
 % ███████╗██╗   ██╗███████╗███████╗
 % ██╔════╝██║   ██║██╔════╝██╔════╝
 % █████╗  ██║   ██║███████╗█████╗  
 % ██╔══╝  ██║   ██║╚════██║██╔══╝  
 % ██║     ╚██████╔╝███████║███████╗
 % ╚═╝      ╚═════╝ ╚══════╝╚══════╝
-
 display_logo:-
 	write(' '), logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, logo_sq, logo_sq, urc, write('   '),logo_sq, logo_sq, urc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc,  nl,
 	write(' '), logo_sq, logo_sq, ulc, hdiv, hdiv, lrc, logo_sq, logo_sq, vdiv, write('   '),logo_sq, logo_sq, vdiv, logo_sq, logo_sq, ulc, hdiv, hdiv, lrc, logo_sq, logo_sq, ulc, hdiv, hdiv, lrc, nl,
@@ -130,6 +193,36 @@ display_logo:-
 	write(' '), logo_sq, logo_sq, vdiv, write('     '),llc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, ulc, lrc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, vdiv, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, nl,
 	write(' '), llc, halfhdiv, lrc, write('      '),llc, hdiv, hdiv, halfhdiv, lrc, write(' '),llc, hdiv, hdiv, hdiv, lrc, llc, hdiv, hdiv, hdiv, lrc,  nl.
 
+%! display_instructions
+% Clears Screen and displays the instructions like shown below
+% Waits for user to press ENTER to return to the main menu
+% ╔═════════════════════════════════╗
+% ║                                 ║
+% ║          Instructions           ║
+% ║                                 ║
+% ╟---------------------------------╢
+% ║                                 ║
+% ║         Welcome to Fuse         ║
+% ║                                 ║
+% ║    Your objective is to make    ║
+% ║        the BIGGEST isle         ║
+% ║                                 ║
+% ║    Move your pieces from the    ║
+% ║     periphery to the center     ║
+% ║   pushing other pieces around   ║
+% ║                                 ║
+% ║                                 ║
+% ║    Move format: IC IR FC FR     ║
+% ║     (I: Initial; F: Final)      ║
+% ║     (C: Column ; R: Row  )      ║
+% ║         WITHOUT SPACES          ║
+% ║            Ex: a1b2             ║
+% ║                                 ║
+% ║                                 ║
+% ║     Press Enter to continue     ║
+% ║                                 ║
+% ║                                 ║
+% ╚═════════════════════════════════╝
 display_instructions :-
 	clear,
 	ulc, write_line(50, '═', cyan), urc, nl,
