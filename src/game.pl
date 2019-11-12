@@ -42,7 +42,7 @@ game_loop(Board, [Player, _], _, _, 2) :-
     write('Player 0 Points : '), write(Points0), nl,
     points_calculation(Board, bl, Points1),
     write('Player 1 Points : '), write(Points1), nl, !,
-	write('Press any key to continue'), get_char(_).
+	write('Press enter to continue...'), read_string(_).
 
 game_loop(Board, [Player, Type], GameMode, Difficulty, _) :-
 	\+ pass_move(Board, Player),

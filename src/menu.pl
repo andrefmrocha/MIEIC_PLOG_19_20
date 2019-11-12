@@ -92,7 +92,7 @@ menu_option(main):-
 	menu_option(Option).
 menu_option(instructions):-
 	display_instructions,
-	get_char(_).
+	read_string(_).
 menu_option(back).
 menu_option(exit):-
 	write('Bye'),
@@ -153,7 +153,7 @@ display_instructions :-
 	vdiv, write_center(50, 'Ex: a1b2', ' ', green), vdiv, nl,
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,
-	vdiv, write_center(50, '0: Back  ', ' ', red), vdiv, nl,
+	vdiv, write_center(50, 'Enter to continue', ' ', cyan), vdiv, nl,
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,
 	llc, write_line(50, '═', cyan), lrc, nl.
