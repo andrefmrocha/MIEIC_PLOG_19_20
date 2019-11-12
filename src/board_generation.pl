@@ -74,13 +74,13 @@ generate_pieces([H | []], PiecesList, NumPieces):-
     generate_pieces(NewPiecesList, PiecesList, Num).
 
 generate_pieces(List, PiecesList, 1):-
-	secondLast(List, wt),
+	second_last(List, wt),
 	last(List, wt),
     append([bl], List, NewPiecesList),
     generate_pieces(NewPiecesList, PiecesList, 0).
 	
 generate_pieces(List, PiecesList, 1):-
-	secondLast(List, bl),
+	second_last(List, bl),
 	last(List, bl),
     append([wt], List, NewPiecesList),
     generate_pieces(NewPiecesList, PiecesList, 0).
