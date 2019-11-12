@@ -1,4 +1,3 @@
-:- ensure_loaded('board_states.pl').
 :- ensure_loaded('interface.pl').
 :- ensure_loaded('move.pl').
 :- ensure_loaded('display.pl').
@@ -29,7 +28,8 @@ start_game :-
 	% TODO: por rand seed
 	display_menu(GameMode),
 	init_game(GameMode, Difficulty, FirstPlayer),
-	empty_board(EB),
+	% TODO: mudar para perguntar por coordenadas
+	initialize_empty_board(3, 3, EB),
 	initialize_board(EB, BeginBoard),
 	!, game_loop(BeginBoard, [0, FirstPlayer], GameMode, Difficulty, 0).
 

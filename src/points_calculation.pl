@@ -1,5 +1,4 @@
 :- ensure_loaded('utils.pl').
-:- ensure_loaded('board_states.pl').
 
 %! points_calculation(+Board, +CurrentDisc, -Points)
 % Calculate the number of points of the given Disc.
