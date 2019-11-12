@@ -8,7 +8,7 @@
 move(Board, Move, NewBoard, Player) :-
 	[IC, IR, FC, FR] = Move,
 	get_element_matrix(Board, IR, IC, Element),
-	player_element(Player, Element),
+	select_piece(Player, Element),
 	valid_push(IC, IR, FC, FR, Board, ProvNewBoard), %!, % descomentar para só dar T/F
 	replace_matrix(IR, IC, null, ProvNewBoard, NewBoard).
 
@@ -76,10 +76,6 @@ next_player([PrevPlayer, bot], [Player, bot], bvb, B1D - B2D, B2D - B1D) :-
 	ProvPlayer is PrevPlayer + 1,
 	Player is mod(ProvPlayer, 2).
 
-% player_element(Player, Piece).
-player_element(0, wt).
-player_element(1, bl).
-
 % push(+FinalIndex, +List, -NewList).
 push(Index, [H | Tail], Solution) :- 
 	push_helper(Index, Tail, Solution, H).
@@ -145,7 +141,7 @@ pass_move(Board, Player) :-
 
 generate_move_points(Board, Player, [IC, IR]-[FC, FR], Points):-
 	move(Board, [IC, IR, FC, FR], NewBoard, Player),
-	player_element(Player, Disc),
+	select_piece(Player, Disc),
 	points_calculation(NewBoard, Disc, Points).
 
 
@@ -172,7 +168,7 @@ generate_boards_points(Player, [BoardH | BoardT], [MoveH | MoveT], [NewPoints | 
 	generate_boards_points(Player, BoardT, MoveT, T2).
 
 get_best_move_points(Player, Board, [], Points):-
-	player_element(Player, Disc),
+	select_piece(Player, Disc),
 	points_calculation(Board, Disc, Points).
 get_best_move_points(Player, Board, Moves, Points):-
 	get_best_move(Player, Board, Moves, Move),
