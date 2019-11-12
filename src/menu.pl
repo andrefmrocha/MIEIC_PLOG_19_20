@@ -10,7 +10,7 @@ write_center(LineSize, Content, Stuffer, Color):-
 
 display_menu(Option) :-
 	clear,
-	ulc, write_line(50, '═', cyan), urc, nl,
+	ulc, write_line(46, '═', cyan), urc, nl,
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,
 	vdiv, write_center(46, 'FUSE', ' ', white), vdiv, nl,
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
@@ -29,7 +29,7 @@ display_menu(Option) :-
 
 display_bot_menu(BotNumber, Option) :-
 	clear,
-	ulc, write_line(50, '═', cyan), urc, nl,
+	ulc, write_line(46, '═', cyan), urc, nl,
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,
 	atom_concat('Bot ', BotNumber, ProvString), atom_concat(ProvString, 'Level', Title),
 	vdiv, write_center(46, Title, ' ', white), vdiv, nl,
@@ -48,7 +48,7 @@ display_bot_menu(BotNumber, Option) :-
 
 choose_order(Option) :-
 	clear, 
-	ulc, write_line(50, '═', cyan), urc, nl,
+	ulc, write_line(46, '═', cyan), urc, nl,
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,
 	vdiv, write_center(46, 'Choose Who Goes First', ' ', white), vdiv, nl,
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,	

@@ -1,4 +1,4 @@
-clear :- write('\e[2J').
+clear :- write('\e[2J\n').
 
 ulc :- ansi_format([fg(cyan)], '~c', [9556]). % ╔ : upper left corner
 urc :- ansi_format([fg(cyan)], '~c', [9559]). % ╗ : upper right corner
