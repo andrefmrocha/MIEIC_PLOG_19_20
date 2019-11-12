@@ -20,19 +20,19 @@ write_center(LineSize, Content, Stuffer, Color):-
 % Clears screens and draws logo by calling @see display_logo and menu like the one shown below
 % Allows the user to choose between 3 Game Modes (Human vs Human; Human vs Bot; Bot vs Bot)
 % ╔═════════════════════════════════╗
-% ║                                 ║
-% ║        Choose Game Mode         ║
-% ║                                 ║
-% ╟---------------------------------╢
-% ║                                 ║
-% ║                                 ║
-% ║        1: Human vs Human        ║
-% ║        2: Human vs Bot          ║
-% ║        3: Bot   vs Bot          ║
-% ║        4: Instructions          ║
-% ║        0: Exit                  ║
-% ║                                 ║
-% ║                                 ║
+% ║                                 	  ║
+% ║        Choose Game Mode         	  ║
+% ║                                 	  ║
+% ╟---------------------------------	  ╢
+% ║                                 	  ║
+% ║                                 	  ║
+% ║        1: Human vs Human        	  ║
+% ║        2: Human vs Bot          	  ║
+% ║        3: Bot   vs Bot          	  ║
+% ║        4: Instructions          	  ║
+% ║        0: Exit                  	  ║
+% ║                                 	  ║
+% ║                                 	  ║
 % ╚═════════════════════════════════╝
 % Asks for an option using @see read_menu and returns it using the argument Option
 display_menu(Option) :-
@@ -61,18 +61,18 @@ display_menu(Option) :-
 % Allows the user to choose the Bot Level making it use a different algorithm (Random, Greedy or MinMax)
 % with different heuristics to evaluate the moves (biggest isle vs difference between the biggest isles)
 % ╔═════════════════════════════════╗
-% ║                                 ║
-% ║           Bot X Level           ║
-% ║                                 ║
-% ╟---------------------------------╢
-% ║                                 ║
-% ║                                 ║
-% ║          1: Random Bot          ║
-% ║          2: Greedy Bot          ║
-% ║          3: MinMax Bot          ║
-% ║          0: Back                ║
-% ║                                 ║
-% ║                                 ║
+% ║                                 	  ║
+% ║           Bot X Level           	  ║
+% ║                                 	  ║
+% ╟---------------------------------	  ╢
+% ║                                 	  ║
+% ║                                 	  ║
+% ║          1: Random Bot          	  ║
+% ║          2: Greedy Bot          	  ║
+% ║          3: MinMax Bot          	  ║
+% ║          0: Back                	  ║
+% ║                                 	  ║
+% ║                                 	  ║
 % ╚═════════════════════════════════╝
 % Value of X depends on the BotNumber, and allows to use the same menu in different cases
 % The option chosen with @see read_menu is returned by the argument Option
@@ -101,17 +101,17 @@ display_bot_menu(BotNumber, Option) :-
 % Clears Screen and draws menu like the one shown below 
 % Allows the user to choose who goes first in the player vs bot Game Mode
 % ╔═════════════════════════════════╗
-% ║                                 ║
-% ║      Choose Who Goes First      ║
-% ║                                 ║
-% ╟---------------------------------╢
-% ║                                 ║
-% ║                                 ║
-% ║            1: Player            ║
-% ║            2: Bot               ║
-% ║            0: Back              ║
-% ║                                 ║
-% ║                                 ║
+% ║                                 	  ║
+% ║      Choose Who Goes First      	  ║
+% ║                                 	  ║
+% ╟---------------------------------	  ╢
+% ║                                 	  ║
+% ║                                 	  ║
+% ║            1: Player            	  ║
+% ║            2: Bot               	  ║
+% ║            0: Back              	  ║
+% ║                                 	  ║
+% ║                                 	  ║
 % ╚═════════════════════════════════╝
 % The option chosen with @see read_menu is returned by the argument Option
 choose_order(Option) :-
@@ -131,7 +131,8 @@ choose_order(Option) :-
 	llc, write_line(50, '═', cyan), lrc, nl,
 	read_menu(Option, order), !.
 
-% TODO: comentar
+%! interpret_decision(+ReadValue, +GameType)
+% Determines the course of action according to ReadValue and GameType
 interpret_decision(back, _).
 interpret_decision(Difficulty, pvb):-
 	choose_order(FirstPlayer), !,
@@ -140,7 +141,8 @@ interpret_decision(Difficulty1, bvb):-
 	display_bot_menu('2 ', Difficulty2), !,
 	interpret_decision(Difficulty1, Difficulty2, bvb).
 
-% TODO: comentar
+%! interpret_decision(+ReadValue1, ReadValue2, +GameType)
+% For state machines with more states, a second ReadValue is needed.
 interpret_decision(_, back, _).
 interpret_decision(Difficulty, FirstPlayer, pvb):-
 	order_difficulty(FirstPlayer, Difficulty, DifficultyTuple),  !,
@@ -148,7 +150,9 @@ interpret_decision(Difficulty, FirstPlayer, pvb):-
 interpret_decision(Difficulty1, Difficulty2, bvb):-
 	!, menu_option(game, bvb, Difficulty1 - Difficulty2, bot).
 
-% TODO: comentar
+%! menu_option(+CurrentOption)
+% State machine for drawing and executing the menu.
+% Acts accordingly to the current option
 menu_option(main):-
 	display_menu(Option),
 	menu_option(Option).
@@ -168,8 +172,9 @@ menu_option(bvb) :-
 menu_option(pvp) :- 
 	menu_option(game, pvp, _, _).
 
-% TODO: comentar
-% menu_option(State, GameMode, Difficulty, FirstPlayer):-
+%! menu_option(game, +GameMode, +Difficulty, +FirstPlayer)
+% State machine to actually begin playing the game at the current 
+% GameMode, with the given Difficuly, starting with FirstPlayer.
 menu_option(game, GameMode, Difficulty, FirstPlayer):-
 	read_dimension(Rows, 'Rows'),
 	read_dimension(Columns, 'Columns'), nl,
@@ -199,31 +204,31 @@ display_logo:-
 % Clears Screen and displays the instructions like shown below
 % Waits for user to press ENTER to return to the main menu
 % ╔═════════════════════════════════╗
-% ║                                 ║
-% ║          Instructions           ║
-% ║                                 ║
-% ╟---------------------------------╢
-% ║                                 ║
-% ║         Welcome to Fuse         ║
-% ║                                 ║
-% ║    Your objective is to make    ║
-% ║        the BIGGEST isle         ║
-% ║                                 ║
-% ║    Move your pieces from the    ║
-% ║     periphery to the center     ║
-% ║   pushing other pieces around   ║
-% ║                                 ║
-% ║                                 ║
-% ║    Move format: IC IR FC FR     ║
-% ║     (I: Initial; F: Final)      ║
-% ║     (C: Column ; R: Row  )      ║
-% ║         WITHOUT SPACES          ║
-% ║            Ex: a1b2             ║
-% ║                                 ║
-% ║                                 ║
-% ║     Press Enter to continue     ║
-% ║                                 ║
-% ║                                 ║
+% ║                                 	  ║
+% ║          Instructions           	  ║
+% ║                                 	  ║
+% ╟---------------------------------	  ╢
+% ║                                 	  ║
+% ║         Welcome to Fuse         	  ║
+% ║                                 	  ║
+% ║    Your objective is to make    	  ║
+% ║        the BIGGEST isle         	  ║
+% ║                                 	  ║
+% ║    Move your pieces from the    	  ║
+% ║     periphery to the center     	  ║
+% ║   pushing other pieces around   	  ║
+% ║                                 	  ║
+% ║                                 	  ║
+% ║    Move format: IC IR FC FR     	  ║
+% ║     (I: Initial; F: Final)      	  ║
+% ║     (C: Column ; R: Row  )      	  ║
+% ║         WITHOUT SPACES          	  ║
+% ║            Ex: a1b2             	  ║
+% ║                                 	  ║
+% ║                                 	  ║
+% ║     Press Enter to continue     	  ║
+% ║                                 	  ║
+% ║                                 	  ║
 % ╚═════════════════════════════════╝
 display_instructions :-
 	clear,
