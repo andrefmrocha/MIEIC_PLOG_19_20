@@ -5,9 +5,11 @@ urc :- ansi_format([fg(cyan)], '~c', [9559]). % ╗ : upper right corner
 llc :- ansi_format([fg(cyan)], '~c', [9562]). % ╚ : lower left corner
 lrc :- ansi_format([fg(cyan)], '~c', [9565]). % ╝ : lower right corner
 
-hdiv :- ansi_format([fg(cyan)], '~c', [9552]), ansi_format([fg(cyan)], '~c', [9552]). % ═ : horizontal division
+hdiv :- halfhdiv, halfhdiv. % ═ : horizontal division
 vdiv :- ansi_format([fg(cyan)], '~c', [9553]). % ║ : vertical division
 mdiv :- ansi_format([fg(cyan)], '~c', [9580]). % ╬ : middle division
+
+halfhdiv :- ansi_format([bold, fg(cyan)], '~c', [9552]).
 
 tr :- ansi_format([fg(cyan)], '~c', [9568]). % ╠ : T right
 tl :- ansi_format([fg(cyan)], '~c', [9571]). % ╣ : T left
@@ -21,6 +23,9 @@ tl_oneline :- ansi_format([fg(cyan)], '~c', [9570]). % ╢ : T left one line
 
 wt:- ansi_format([bold, fg(white)], '~c', [11044]), write(' '). % White piece
 bl:- ansi_format([bold, fg(black)], '~c', [11044]), write(' '). % Black piece
+
+logo_sq :- ansi_format([bold, fg(black)], '~s', ['█']).
+
 null:- write('  '). % Null space
 corner:- write(' '). % Board corner
 empty:- ansi_format([bold, bg(cyan)], '~s', [' ']), ansi_format([bold, bg(cyan)], '~s', [' ']). % Empty space

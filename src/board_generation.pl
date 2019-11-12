@@ -1,7 +1,38 @@
 :- use_module(library(random)).
 :- ensure_loaded('utils.pl').
 :- ensure_loaded('board_pieces.pl').
-:- ensure_loaded('board_states.pl').
+
+init_row_helper(1, [Ends], Ends, _) :- !.
+
+init_row_helper(N, [Middle | T], Ends, Middle) :-
+	N1 is N - 1,
+	init_row_helper(N1, T, Ends, Middle).
+
+initialize_row_helper(Columns, [Ends | T], Ends, Middle) :-
+	N1 is Columns - 1,
+	init_row_helper(N1, T, Ends, Middle).
+
+initialize_row(Columns, Line, middle) :-
+	!, initialize_row_helper(Columns, Line, null, empty).
+
+initialize_row(Columns, Line, outskirt) :-
+	!, initialize_row_helper(Columns, Line, corner, null).
+
+initialize_board_helper(1, Columns, [Line]) :-
+	!, initialize_row(Columns, Line, outskirt).
+
+initialize_board_helper(N, Columns, [Line | TBoard]) :-
+	initialize_row(Columns, Line, middle),
+	N1 is N - 1,
+	initialize_board_helper(N1, Columns, TBoard).
+	
+initialize_empty_board(Rows, Columns, [Line |TBoard]) :-
+	Rows > 1, Columns > 1,
+	NRows is Rows + 2,
+	NColumns is Columns + 2,
+	initialize_row(NColumns, Line, outskirt),
+	N is NRows -1,
+	initialize_board_helper(N, NColumns, TBoard).
 
 initialize_board([Line | TBoard], FinalBoard):-
 	length([Line | TBoard], NRows),

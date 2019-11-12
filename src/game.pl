@@ -1,4 +1,3 @@
-:- ensure_loaded('board_states.pl').
 :- ensure_loaded('interface.pl').
 :- ensure_loaded('move.pl').
 :- ensure_loaded('display.pl').
@@ -42,7 +41,8 @@ game_loop(Board, [Player, _], _, _, 2) :-
 	points_calculation(Board, wt, Points0),
     write('Player 0 Points : '), write(Points0), nl,
     points_calculation(Board, bl, Points1),
-    write('Player 1 Points : '), write(Points1), nl, !.
+    write('Player 1 Points : '), write(Points1), nl, !,
+	write('Press any key to continue'), get_char(_).
 
 game_loop(Board, [Player, Type], GameMode, Difficulty, _) :-
 	\+ pass_move(Board, Player),

@@ -62,7 +62,6 @@ display_line([Element | Rest]) :-
 	display_line(Rest).
 
 display_game([Line | TBoard], Player):-
-	board_minimum_size([Line | TBoard]),
 	write('Player turn: '), write(Player), nl, nl,
 	write_columns_index(Line, 'A'),
 	display_first_line([Line | TBoard], 0).
@@ -79,8 +78,3 @@ write_columns_helper([_ | TLine], Letter) :-
 
 write_columns_index(Line, Letter) :-
 	write('   '), write_columns_helper(Line, Letter).
-
-board_minimum_size([Line | TBoard]):-
-	length(Line, LineSize),
-	length([Line | TBoard], ColSize),
-	LineSize > 2, ColSize > 2.
