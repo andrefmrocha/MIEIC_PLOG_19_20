@@ -67,11 +67,11 @@ read_menu(Option, Type):-
 % 	atom_number(Input, Int),
 % 	Int =< NOptions.
 
-parse_menu(['0' | []], _, main) :- write(' Exiting\n'), abort.
+parse_menu(['0' | []], exit, main).
 parse_menu(['1' | []], pvp, main).
 parse_menu(['2' | []], pvb, main).
 parse_menu(['3' | []], bvb, main).
-parse_menu(['4' | []], _, main) :- display_instructions.
+parse_menu(['4' | []], instructions, main).
 
 parse_menu(['0' | []], back, bot).
 parse_menu(['1' | []], 0, bot).

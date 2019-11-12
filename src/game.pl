@@ -17,21 +17,23 @@ init_game(pvb, DifficultyTuple, FirstPlayer) :-
 	order_difficulty(FirstPlayer, Difficulty, DifficultyTuple).
 
 init_game(bvb, Difficulty1 - Difficulty2, bot) :- 
-	display_bot_menu('1 ', Difficulty1), !,
+	display_bot_menu('1 ', Difficulty1),!,
 	display_bot_menu('2 ', Difficulty2), !,
 	write('Bot vs Bot').
+
+init_game(_, _, _):-
+	!, start_game.
 
 initial(GameMode, Difficulty, FirstPlayer) :-
 	display_menu(GameMode),
 	init_game(GameMode, Difficulty, FirstPlayer).
 
+play:-
+	start_game,
+	play.
+
 start_game :-
-	% TODO: por rand seed
-	display_menu(GameMode),
-	init_game(GameMode, Difficulty, FirstPlayer),
-	empty_board(EB),
-	initialize_board(EB, BeginBoard),
-	!, game_loop(BeginBoard, [0, FirstPlayer], GameMode, Difficulty, 0).
+	menu_option(main).
 
 % finish
 game_loop(Board, [Player, _], _, _, 2) :- 

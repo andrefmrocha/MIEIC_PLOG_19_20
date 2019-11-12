@@ -25,7 +25,7 @@ display_menu(Option) :-
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,
 	llc, write_line(46, '═', cyan), lrc, nl,
-	read_menu(Option, main), !.
+	read_menu(Option, main).
 
 display_bot_menu(BotNumber, Option) :-
 	clear,
@@ -44,7 +44,7 @@ display_bot_menu(BotNumber, Option) :-
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,
 	llc, write_line(46, '═', cyan), lrc, nl,
-	read_menu(Option, bot), !.
+	read_menu(Option, bot),!.
 
 choose_order(Option) :-
 	clear, 
@@ -62,3 +62,31 @@ choose_order(Option) :-
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,
 	llc, write_line(46, '═', cyan), lrc, nl,
 	read_menu(Option, order), !.
+
+
+
+% state_machine(Type, State, NextState).
+state_machine(exit, _):- write(' Exiting\n'), abort.
+state_machine(pvp, pvp).
+state_machine(pvp, main).
+
+
+
+% menu_option(State, GameMode, Difficulty, FirstPlayer):-
+menu_option(main):-
+	display_menu(Option),
+	menu_option(Option).
+menu_option(instructions):-
+	write('Batatas\n Press any button to go back'),
+	get_char(_).
+menu_option(back).
+menu_option(exit):-
+	write('Bye'),
+	abort.
+menu_option(pvb) :- 
+	display_bot_menu('', Difficulty), !,
+	choose_order(FirstPlayer),
+	order_difficulty(FirstPlayer, Difficulty, DifficultyTuple).
+menu_option(GameMode, GameMode, Difficulty, FirstPlayer):-
+	init_game(GameMode, Difficulty, FirstPlayer).
+
