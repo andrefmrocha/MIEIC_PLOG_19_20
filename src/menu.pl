@@ -10,9 +10,10 @@ write_center(LineSize, Content, Stuffer, Color):-
 
 display_menu(Option) :-
 	clear,
+	display_logo,
 	ulc, write_line(50, '═', cyan), urc, nl,
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,
-	vdiv, write_center(50, 'FUSE', ' ', white), vdiv, nl,
+	vdiv, write_center(50, 'Choose Game Mode', ' ', white), vdiv, nl,
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
 	tr_oneline, write_line(50, '-', black), tl_oneline, nl,
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
@@ -83,8 +84,7 @@ interpret_decision(Difficulty, FirstPlayer, pvb):-
 	order_difficulty(FirstPlayer, Difficulty, DifficultyTuple),  !,
 	menu_option(game, pvb, DifficultyTuple, FirstPlayer).
 interpret_decision(Difficulty1, Difficulty2, bvb):-
-	write('Bot vs Bot'), !,
-	menu_option(game, bvb, Difficulty1 - Difficulty2, bot).
+	!, menu_option(game, bvb, Difficulty1 - Difficulty2, bot).
 
 % menu_option(State, GameMode, Difficulty, FirstPlayer):-
 menu_option(main):-
@@ -92,7 +92,7 @@ menu_option(main):-
 	menu_option(Option).
 menu_option(instructions):-
 	display_instructions,
-	get_char(_).
+	read_string(_).
 menu_option(back).
 menu_option(exit):-
 	write('Bye'),
@@ -106,7 +106,9 @@ menu_option(bvb) :-
 menu_option(pvp) :- 
 	menu_option(game, pvp, _, _).
 menu_option(game, GameMode, Difficulty, FirstPlayer):-
-	initialize_empty_board(3, 3, EB),
+	read_dimension(Rows, 'Rows'),
+	read_dimension(Columns, 'Columns'), nl,
+	initialize_empty_board(Rows, Columns, EB),
 	initialize_board(EB, BeginBoard),
 	!, game_loop(BeginBoard, [0, FirstPlayer], GameMode, Difficulty, 0).
 
@@ -121,12 +123,12 @@ menu_option(game, GameMode, Difficulty, FirstPlayer):-
 % ╚═╝      ╚═════╝ ╚══════╝╚══════╝
 
 display_logo:-
-	write('   '), logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, logo_sq, logo_sq, urc, write('   '),logo_sq, logo_sq, urc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc,  nl,
-	write('   '), logo_sq, logo_sq, ulc, hdiv, hdiv, lrc, logo_sq, logo_sq, vdiv, write('   '),logo_sq, logo_sq, vdiv, logo_sq, logo_sq, ulc, hdiv, hdiv, lrc, logo_sq, logo_sq, ulc, hdiv, hdiv, lrc, nl,
-	write('   '), logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, write('  '),logo_sq, logo_sq, vdiv, write('   '),logo_sq, logo_sq, vdiv, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, nl,
-	write('   '), logo_sq, logo_sq, ulc, hdiv, lrc, write('  '),logo_sq, logo_sq, vdiv, write('   '),logo_sq, logo_sq, vdiv, llc, hdiv, hdiv, logo_sq, logo_sq, vdiv, logo_sq, logo_sq, ulc, hdiv, lrc, nl,
-	write('   '), logo_sq, logo_sq, vdiv, write('     '),llc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, ulc, lrc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, vdiv, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, nl,
-	write('   '), llc, halfhdiv, lrc, write('      '),llc, hdiv, hdiv, halfhdiv, lrc, write(' '),llc, hdiv, hdiv, hdiv, lrc, llc, hdiv, hdiv, hdiv, lrc,  nl.
+	write(' '), logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, logo_sq, logo_sq, urc, write('   '),logo_sq, logo_sq, urc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc,  nl,
+	write(' '), logo_sq, logo_sq, ulc, hdiv, hdiv, lrc, logo_sq, logo_sq, vdiv, write('   '),logo_sq, logo_sq, vdiv, logo_sq, logo_sq, ulc, hdiv, hdiv, lrc, logo_sq, logo_sq, ulc, hdiv, hdiv, lrc, nl,
+	write(' '), logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, write('  '),logo_sq, logo_sq, vdiv, write('   '),logo_sq, logo_sq, vdiv, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, nl,
+	write(' '), logo_sq, logo_sq, ulc, hdiv, lrc, write('  '),logo_sq, logo_sq, vdiv, write('   '),logo_sq, logo_sq, vdiv, llc, hdiv, hdiv, logo_sq, logo_sq, vdiv, logo_sq, logo_sq, ulc, hdiv, lrc, nl,
+	write(' '), logo_sq, logo_sq, vdiv, write('     '),llc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, ulc, lrc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, vdiv, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, nl,
+	write(' '), llc, halfhdiv, lrc, write('      '),llc, hdiv, hdiv, halfhdiv, lrc, write(' '),llc, hdiv, hdiv, hdiv, lrc, llc, hdiv, hdiv, hdiv, lrc,  nl.
 
 display_instructions :-
 	clear,
@@ -153,7 +155,7 @@ display_instructions :-
 	vdiv, write_center(50, 'Ex: a1b2', ' ', green), vdiv, nl,
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,
-	vdiv, write_center(50, '0: Back  ', ' ', red), vdiv, nl,
+	vdiv, write_center(50, 'Press Enter to continue', ' ', cyan), vdiv, nl,
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,
 	llc, write_line(50, '═', cyan), lrc, nl.

@@ -67,20 +67,20 @@ read_menu(Option, Type):-
 % 	atom_number(Input, Int),
 % 	Int =< NOptions.
 
-parse_menu(['0' | []], exit, main).
-parse_menu(['1' | []], pvp, main).
-parse_menu(['2' | []], pvb, main).
-parse_menu(['3' | []], bvb, main).
-parse_menu(['4' | []], instructions, main).
+parse_menu(['0'], exit, main).
+parse_menu(['1'], pvp, main).
+parse_menu(['2'], pvb, main).
+parse_menu(['3'], bvb, main).
+parse_menu(['4'], instructions, main).
 
-parse_menu(['0' | []], back, bot).
-parse_menu(['1' | []], 0, bot).
-parse_menu(['2' | []], 1, bot).
-parse_menu(['3' | []], 2, bot).
+parse_menu(['0'], back, bot).
+parse_menu(['1'], 0, bot).
+parse_menu(['2'], 1, bot).
+parse_menu(['3'], 2, bot).
 
-parse_menu(['0' | []], back, order).
-parse_menu(['1' | []], human, order).
-parse_menu(['2' | []], bot, order).
+parse_menu(['0'], back, order).
+parse_menu(['1'], human, order).
+parse_menu(['2'], bot, order).
 
 parse_menu([], O, Type) :- !, read_menu(O, Type).
 parse_menu(_, O, Type) :- 
@@ -91,3 +91,22 @@ parse_menu(_, O, Type) :-
 noptions(main, 4).
 noptions(bot, 3).
 noptions(order, 2).
+
+read_dimension(Output, Dimension):-
+	format(' Number of ~s (spaces ignored): ', [Dimension]),
+    read_string(Input),
+    parse_dimension(Input, Output, Dimension).
+
+parse_dimension(Input, Output, _) :-
+	string_chars(Str, Input),
+	atom_number(Str, Output),
+	Output > 0, !.
+
+% In case the input is empty calls read_move again
+parse_dimension([], Output, Dimension) :- !, read_dimension(Output, Dimension).
+
+% TODO: fazer funcao melhor
+parse_dimension(['e', 'x', 'i', 't'], _, _) :- write(' Exiting\n'), !, abort.
+
+% In case of invalid input, shows error message and fails (TODO: change to read_move again)
+parse_dimension(_, Output, Dimension) :- format(' ~s must be an integer greater than 0~n', [Dimension]), !, read_dimension(Output, Dimension).

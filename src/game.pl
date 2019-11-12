@@ -5,8 +5,8 @@
 :- ensure_loaded('menu.pl').
 
 
-order_difficulty(human, Difficulty, _ - Difficulty) :- write('Human vs Bot').
-order_difficulty(bot, Difficulty, Difficulty - _) :- write('Bot vs Human').
+order_difficulty(human, Difficulty, _ - Difficulty).
+order_difficulty(bot, Difficulty, Difficulty - _).
 
 init_game(pvp, _, human).
 
@@ -17,8 +17,7 @@ init_game(pvb, DifficultyTuple, FirstPlayer) :-
 
 init_game(bvb, Difficulty1 - Difficulty2, bot) :- 
 	display_bot_menu('1 ', Difficulty1),!,
-	display_bot_menu('2 ', Difficulty2), !,
-	write('Bot vs Bot').
+	display_bot_menu('2 ', Difficulty2), !.
 
 init_game(_, _, _):-
 	!, start_game.
@@ -42,7 +41,7 @@ game_loop(Board, [Player, _], _, _, 2) :-
     write('Player 0 Points : '), write(Points0), nl,
     points_calculation(Board, bl, Points1),
     write('Player 1 Points : '), write(Points1), nl, !,
-	write('Press any key to continue'), get_char(_).
+	write('Press enter to continue..'), read_string(_).
 
 game_loop(Board, [Player, Type], GameMode, Difficulty, _) :-
 	\+ pass_move(Board, Player),
