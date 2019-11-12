@@ -6,7 +6,7 @@ write_line(LineSize, Char, Color) :-
 
 write_center(LineSize, Content, Stuffer, Color):-
 	char_code(Stuffer, StufferCode),
-	ansi_format([fg(Color)],'~*t~s~*t~*|', [StufferCode, Content, StufferCode, LineSize]).
+	ansi_format([fg(Color), bold],'~*t~s~*t~*|', [StufferCode, Content, StufferCode, LineSize]).
 
 display_menu(Option) :-
 	clear,
@@ -14,7 +14,7 @@ display_menu(Option) :-
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,
 	vdiv, write_center(46, 'FUSE', ' ', white), vdiv, nl,
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	tr_oneline, write_line(46, '-', yellow), tl_oneline, nl,
+	tr_oneline, write_line(46, '-', black), tl_oneline, nl,
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,
 	vdiv, write_center(46, '1: Human vs Human', ' ', white), vdiv, nl,
@@ -34,7 +34,7 @@ display_bot_menu(BotNumber, Option) :-
 	atom_concat('Bot ', BotNumber, ProvString), atom_concat(ProvString, 'Level', Title),
 	vdiv, write_center(46, Title, ' ', white), vdiv, nl,
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	tr_oneline, write_line(46, '-', yellow), tl_oneline, nl,
+	tr_oneline, write_line(46, '-', black), tl_oneline, nl,
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,
 	vdiv, write_center(46, '1: Random Bot', ' ', white), vdiv, nl,
@@ -52,7 +52,7 @@ choose_order(Option) :-
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,
 	vdiv, write_center(46, 'Choose Who Goes First', ' ', white), vdiv, nl,
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
-	tr_oneline, write_line(46, '-', yellow), tl_oneline, nl,
+	tr_oneline, write_line(46, '-', black), tl_oneline, nl,
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
 	vdiv, write_center(46, '', ' ', white), vdiv, nl,
 	vdiv, write_center(46, '1: Player', ' ', white), vdiv, nl,
@@ -79,3 +79,33 @@ display_logo:-
 	write('   '), logo_sq, logo_sq, ulc, hdiv, lrc, write('  '),logo_sq, logo_sq, vdiv, write('   '),logo_sq, logo_sq, vdiv, llc, hdiv, hdiv, logo_sq, logo_sq, vdiv, logo_sq, logo_sq, ulc, hdiv, lrc, nl,
 	write('   '), logo_sq, logo_sq, vdiv, write('     '),llc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, ulc, lrc, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, vdiv, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, logo_sq, urc, nl,
 	write('   '), llc, halfhdiv, lrc, write('      '),llc, hdiv, hdiv, halfhdiv, lrc, write(' '),llc, hdiv, hdiv, hdiv, lrc, llc, hdiv, hdiv, hdiv, lrc,  nl.
+
+display_instructions :-
+	clear,
+	ulc, write_line(46, '═', cyan), urc, nl,
+	vdiv, write_center(46, '', ' ', white), vdiv, nl,
+	vdiv, write_center(46, 'Instructions', ' ', green), vdiv, nl,
+	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
+	tr_oneline, write_line(46, '-', black), tl_oneline, nl,
+	vdiv, write_center(46, '', ' ', white), vdiv, nl,
+	vdiv, write_center(46, 'Welcome to Fuse', ' ', white), vdiv, nl,	
+	vdiv, write_center(46, '', ' ', white), vdiv, nl,
+	vdiv, write_center(46, 'Your objective is to make', ' ', white), vdiv, nl,
+	vdiv, write_center(46, 'the BIGGEST isle', ' ', white), vdiv, nl,
+	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
+	vdiv, write_center(46, 'Move your pieces from the', ' ', white), vdiv, nl,	
+	vdiv, write_center(46, 'periphery to the center', ' ', white), vdiv, nl,
+	vdiv, write_center(46, 'pushing other pieces around', ' ', white), vdiv, nl,
+	vdiv, write_center(46, '', ' ', white), vdiv, nl,
+	vdiv, write_center(46, '', ' ', white), vdiv, nl,
+	vdiv, write_center(46, 'Move format: IC IR FC FR', ' ', white), vdiv, nl,	
+	vdiv, write_center(46, '(I: Initial; F: Final)', ' ', white), vdiv, nl,
+	vdiv, write_center(46, '(C: Column ; R: Row  )', ' ', white), vdiv, nl,
+	vdiv, write_center(46, 'WITHOUT SPACES', ' ', red), vdiv, nl,
+	vdiv, write_center(46, 'Ex: a1b2', ' ', green), vdiv, nl,
+	vdiv, write_center(46, '', ' ', white), vdiv, nl,
+	vdiv, write_center(46, '', ' ', white), vdiv, nl,
+	vdiv, write_center(46, '0: Back  ', ' ', red), vdiv, nl,
+	vdiv, write_center(46, '', ' ', white), vdiv, nl,	
+	vdiv, write_center(46, '', ' ', white), vdiv, nl,
+	llc, write_line(46, '═', cyan), lrc, nl.

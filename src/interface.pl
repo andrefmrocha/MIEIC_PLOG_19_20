@@ -27,7 +27,7 @@ parse_move([], M, B) :- !, read_move(M, B).
 parse_move(['e', 'x', 'i', 't'], _, _) :- write(' Exiting\n'), !, abort.
 
 % In case of invalid input, shows error message and fails (TODO: change to read_move again)
-parse_move(_, M, B) :- write(' Move format is wrong: IC IR FC FR (without spacing)\n'), !, read_move(M, B).
+parse_move(_, M, B) :- write(' Wrong format: InitialColumn InitialRow FinalColumn FinalRow (without spacing).\n Ex:a1d1\n\n'), !, read_move(M, B).
 
 % valid_move_input(-Input, +Move, -Board) :- validates each of the four input chars and transforms each one to a number
 valid_move_input([IC, IR, FC, FR], [IC_N, IR_N, FC_N, FR_N], [Line | Board]) :-
@@ -71,7 +71,7 @@ parse_menu(['0' | []], _, main) :- write(' Exiting\n'), abort.
 parse_menu(['1' | []], pvp, main).
 parse_menu(['2' | []], pvb, main).
 parse_menu(['3' | []], bvb, main).
-parse_menu(['4' | []], _, main) :- display_instructions.
+parse_menu(['4' | []], _, main).
 
 parse_menu(['0' | []], back, bot).
 parse_menu(['1' | []], 0, bot).
