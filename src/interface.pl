@@ -75,8 +75,10 @@ parse_menu(['4' | []], instructions, main).
 
 parse_menu(['0' | []], back, bot).
 parse_menu(['1' | []], 0, bot).
-parse_menu(['2' | []], 1, bot).
-parse_menu(['3' | []], 2, bot).
+parse_menu(['2', '.', '1'  | []], 1, bot).
+parse_menu(['2', '.', '2'  | []], 2, bot).
+parse_menu(['3', '.', '1'  | []], 3, bot).
+parse_menu(['3', '.', '2'  | []], 4, bot).
 
 parse_menu(['0' | []], back, order).
 parse_menu(['1' | []], human, order).
@@ -89,5 +91,5 @@ parse_menu(_, O, Type) :-
 	!, read_menu(O, Type).
 
 noptions(main, 4).
-noptions(bot, 3).
+noptions(bot, 4).
 noptions(order, 2).
