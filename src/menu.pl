@@ -103,12 +103,12 @@ menu_option(pvb) :-
 menu_option(bvb) :- 
 	display_bot_menu('1 ', Difficulty),!,
 	interpret_decision(Difficulty, bvb).
+menu_option(pvp) :- 
+	menu_option(game, pvp, _, _).
 menu_option(game, GameMode, Difficulty, FirstPlayer):-
 	initialize_empty_board(3, 3, EB),
 	initialize_board(EB, BeginBoard),
 	!, game_loop(BeginBoard, [0, FirstPlayer], GameMode, Difficulty, 0).
-menu_option(GameMode, GameMode, Difficulty, FirstPlayer):-
-	init_game(GameMode, Difficulty, FirstPlayer).
 
 
 
