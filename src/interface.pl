@@ -85,7 +85,7 @@ parse_menu(['2'], bot, order).
 parse_menu([], O, Type) :- !, read_menu(O, Type).
 parse_menu(_, O, Type) :- 
 	noptions(Type, NOptions),
-	write(' Invalid Menu Option (choose a number from 0 to ' ), write(NOptions) , write(')\n'), 
+	format(' Invalid Menu Option (choose a number from 0 to ~d)~n', [NOptions]),
 	!, read_menu(O, Type).
 
 noptions(main, 4).
@@ -93,14 +93,13 @@ noptions(bot, 3).
 noptions(order, 2).
 
 read_dimension(Output, Dimension):-
-	format(' Number of ~s (spaces ignored): ', [Dimension]),
+	format(' Number of ~s: ', [Dimension]),
     read_string(Input),
     parse_dimension(Input, Output, Dimension).
 
-parse_dimension(Input, Output, _) :-
-	string_chars(Str, Input),
-	atom_number(Str, Output),
-	Output > 0, !.
+parse_dimension([Input], Output, _) :-
+	atom_number(Input, Output),
+	Output > 0, Output < 8, !.
 
 % In case the input is empty calls read_move again
 parse_dimension([], Output, Dimension) :- !, read_dimension(Output, Dimension).
@@ -109,4 +108,4 @@ parse_dimension([], Output, Dimension) :- !, read_dimension(Output, Dimension).
 parse_dimension(['e', 'x', 'i', 't'], _, _) :- write(' Exiting\n'), !, abort.
 
 % In case of invalid input, shows error message and fails (TODO: change to read_move again)
-parse_dimension(_, Output, Dimension) :- format(' ~s must be an integer greater than 0~n', [Dimension]), !, read_dimension(Output, Dimension).
+parse_dimension(_, Output, Dimension) :- format(' ~s must be an integer between 0 and 8~n', [Dimension]), !, read_dimension(Output, Dimension).

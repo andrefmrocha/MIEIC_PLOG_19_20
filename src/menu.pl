@@ -32,7 +32,7 @@ display_bot_menu(BotNumber, Option) :-
 	clear,
 	ulc, write_line(50, '═', cyan), urc, nl,
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,
-	atom_concat('Bot ', BotNumber, ProvString), atom_concat(ProvString, 'Level', Title),
+	format(atom(Title), 'Bot ~sLevel', [BotNumber]),
 	vdiv, write_center(50, Title, ' ', white), vdiv, nl,
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
 	tr_oneline, write_line(50, '-', black), tl_oneline, nl,
