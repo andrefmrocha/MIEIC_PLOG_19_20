@@ -89,24 +89,22 @@ initialize_board([Line | TBoard], FinalBoard):-
 % Final board is returned in the InitializedBoard argument
 generate_board(Board, Board, []).
 generate_board([FirstRow | Rest], Final, Pieces) :-
-	generate_line(FirstRow, [], NewLine, Pieces, NewPieces),
+	generate_line(FirstRow, NewLine, Pieces, NewPieces),
 	rotate_board_clockwise([NewLine | Rest], NewRot, -1),
 	generate_board(NewRot, Final, NewPieces).	
 
-%! generate_line(+OriginalRow, +AccumulateRow, -FinalRow, +InitialPieceList, -FinalPieceList)
+%! generate_line(+OriginalRow, -FinalRow, +InitialPieceList, -FinalPieceList)
 % Whenever it encounters a null cell a new board piece from the InitialPieceList is placed
-% The OriginalRow is a List of the outskirt type ([corner, null*, corner]) and builds the AccumulateRow
-% that saves its result in the end of the recursion in the FinalRow argument
+% on the OriginalRow - a List of the outskirt type ([corner, null*, corner])
+% The result is saved in the FinalRow argument
 % The FinalPieceList is the InitialPieceList without the placed pieces
-% TODO: refactor
-generate_line([], Line, Line, Pieces, Pieces).
-generate_line([null | T1], Line, FinalLine, [H | T2], NewPieces):-
-    append(Line, [H], NewLine),
-    generate_line(T1, NewLine, FinalLine, T2, NewPieces).
-generate_line([H | T], Line, FinalLine, Pieces, NewPieces):-
-    H \= null,
-    append(Line, [H], NewLine),
-    generate_line(T, NewLine, FinalLine, Pieces, NewPieces).
+generate_line([], [], Pieces, Pieces).
+
+generate_line([null | TORow], [H | TFRow], [H | TLPieces], NewPieces) :-
+	generate_line(TORow, TFRow, TLPieces, NewPieces).
+
+generate_line([corner | TORow], [corner | TFRow], Pieces, NewPieces) :-
+	generate_line(TORow, TFRow, Pieces, NewPieces).
 
 
 % TODO: ! para cortar varias soluções
@@ -126,12 +124,22 @@ generate_pieces([H | []], PiecesList, NumPieces):-
     append([Piece], [H], NewPiecesList),
     generate_pieces(NewPiecesList, PiecesList, Num).
 
+generate_pieces([bl, bl | _], _, 1):-
+	second_last(List, wt),
+	last(List, wt),			!,
+	fail.
+
 generate_pieces(List, PiecesList, 1):-
 	second_last(List, wt),
-	last(List, wt),
+	last(List, wt),	
     append([bl], List, NewPiecesList),
     generate_pieces(NewPiecesList, PiecesList, 0).
 	
+generate_pieces([wt, wt | _], _, 1):-
+	second_last(List, bl),
+	last(List, bl), 		!,
+	fail.
+
 generate_pieces(List, PiecesList, 1):-
 	second_last(List, bl),
 	last(List, bl),
@@ -157,6 +165,7 @@ generate_pieces([bl, bl | T], PiecesList, NumPieces):-
     append([wt], [bl| [bl | T]], NewPiecesList),
     generate_pieces(NewPiecesList, PiecesList, Num).
 generate_pieces([H, H2 | T], PiecesList, NumPieces):-
+	repeat,
     random_between(0, 1, Random),
     select_piece(Random, Piece),
     Num is NumPieces - 1,
