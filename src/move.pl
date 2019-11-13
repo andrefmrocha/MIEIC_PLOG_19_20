@@ -177,10 +177,10 @@ findall_moves_helper([[FC, FR] | Remain], Board, Player, Moves, Sol) :-
 	!, append(Moves, List, NewMoves),
 	!, findall_moves_helper(Remain, Board, Player, NewMoves, Sol).
 	
-%! findall_moves(+Board, +Player, -Moves)
+%! valid_moves(+Board, +Player, -Moves)
 % Finds all the current possible moves for the given
 % Board and Player, storing it in Moves.
-findall_moves(Board, Player, Moves) :-
+valid_moves(Board, Player, Moves) :-
 	findall([FC, FR], inside_board(Board, FC, FR), FinalPos),
 	!, findall_moves_helper(FinalPos, Board, Player, _, Moves).
 
@@ -188,7 +188,7 @@ findall_moves(Board, Player, Moves) :-
 % Selects a random Move from the Board. Applied 
 % very easy difficulty of the game. 
 random_move(Board, Player, Move) :-
-	findall_moves(Board, Player, Moves),
+	valid_moves(Board, Player, Moves),
 	length(Moves, NMoves),
 	NMoves > 0,
 	LastIndex is NMoves - 1,
@@ -199,16 +199,16 @@ random_move(Board, Player, Move) :-
 % Determines if the current Player will have to 
 % pass his turn
 pass_move(Board, Player) :-
-	findall_moves(Board, Player, []).
+	valid_moves(Board, Player, []).
 
 %! generate_move_points(+Board, +Player, +Opponent, +Move, -PlayerPoints, -OpponentPoints)
 % Generates a given move points for both the Player as well as the opponent
 generate_move_points(Board, Player, Opponent, [IC, IR]-[FC, FR], PlayerPoints, OpponentPoints):-
 	move(Board, [IC, IR, FC, FR], NewBoard, Player),
 	select_piece(Player, PlayerDisc),
-	points_calculation(NewBoard, PlayerDisc, PlayerPoints),
+	value(NewBoard, PlayerDisc, PlayerPoints),
 	select_piece(Opponent, OpponentDisc),
-	points_calculation(NewBoard, OpponentDisc, OpponentPoints).
+	value(NewBoard, OpponentDisc, OpponentPoints).
 
 %! get_best_with_difference(+Moves, +PlayerPoints, +OpponentPoints, -Move)
 % Get the best Move out of Moves, according to the current Player and Opponent
@@ -240,7 +240,7 @@ greedy_difference_move(Player, Opponent, Board, Moves, Move):-
 % Using a greedy approach, by analzing only the next player's move
 % determines the best Move.
 greedy_move(Player, Opponent, Board, Move):-
-	findall_moves(Board, Player, Moves),
+	valid_moves(Board, Player, Moves),
 	greedy_max_move(Player, Opponent, Board, Moves, Move).
 
 %! get_new_boards(+InitialBoard, +Moves, -NewBoards, +Player)
@@ -255,8 +255,8 @@ get_new_boards(InitialBoard, [[IC, IR]-[FC, FR] | MoveT], [NewBoard | T2], Playe
 get_best_move_points(Opponent, Player, Board, [], OpponentPoints, PlayerPoints):-
 	select_piece(Opponent, OpponentDisc),
 	select_piece(Player, PlayerDisc),
-	points_calculation(Board, OpponentDisc, OpponentPoints),
-	points_calculation(Board, PlayerDisc, PlayerPoints).
+	value(Board, OpponentDisc, OpponentPoints),
+	value(Board, PlayerDisc, PlayerPoints).
 get_best_move_points(Opponent, Player, Board, Moves, OpponentPoints, PlayerPoints):-
 	greedy_max_move(Opponent, Player, Board, Moves, Move),
 	generate_move_points(Board, Opponent, Player, Move, OpponentPoints, PlayerPoints).
@@ -266,7 +266,7 @@ get_best_move_points(Opponent, Player, Board, Moves, OpponentPoints, PlayerPoint
 % Gets all the moves from the given board for the Opponent, calculating OpponentPoints 
 % as well as PlayerPoints
 generate_board_points(Opponent, Player, Board, OpponentPoints, PlayerPoints):-
-	findall_moves(Board, Opponent, Moves),
+	valid_moves(Board, Opponent, Moves),
 	get_best_move_points(Opponent, Player, Board, Moves, OpponentPoints, PlayerPoints).
 
 %! difference(+PlayerPoints, +OpponentPoints, -PointsDifference)
@@ -289,7 +289,7 @@ minimax_worst_play(FirstDegreeMoves, _, OpponentPoints, Move):-
 % decide which is the best move for Player
 % @param Func is a predicate of arity 4
 minimax(Board, Player, Func, Move):-
-	findall_moves(Board, Player, FirstDegreeMoves),
+	valid_moves(Board, Player, FirstDegreeMoves),
 	get_new_boards(Board, FirstDegreeMoves, FirstDegreeBoards, Player),
 	NextPlayer is Player + 1,
 	Opponent is mod(NextPlayer, 2),

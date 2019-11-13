@@ -1,36 +1,36 @@
 :- ensure_loaded('utils.pl').
 
-%! points_calculation(+Board, +CurrentDisc, -Points)
+%! value(+Board, +CurrentDisc, -Points)
 % Calculate the number of points of the given Disc.
 % Is true when given points are the maximum calculatable in the Board.
 % @param Board must be a list of lists
-points_calculation(Visited, Disc, MaxPoints):-
-    points_calculation(Visited, Disc, _, MaxPoints, 0, 0).
+value(Visited, Disc, MaxPoints):-
+    value(Visited, Disc, _, MaxPoints, 0, 0).
 
-%! points_calculation(+Board, +CurrentDisc, +Points, -MaxPoints, +Y, +X)
+%! value(+Board, +CurrentDisc, +Points, -MaxPoints, +Y, +X)
 % Calculate the number of points starting off in some coordinates
 % @param Board must be a list of lists
-points_calculation(Visited, _, Points, Points, Y, X):-
+value(Visited, _, Points, Points, Y, X):-
     \+ get_element_matrix(Visited, Y, X, _),
     XRight is X + 1,
     \+ get_element_matrix(Visited, 0, XRight, _).
-points_calculation(Visited, Disc, Points, MaxPoints, Y, X):-
+value(Visited, Disc, Points, MaxPoints, Y, X):-
     \+ get_element_matrix(Visited, Y, X, _),
     XRight is X + 1,
     get_element_matrix(Visited, 0, XRight, Elem),
     Elem \= nil,
-    points_calculation(Visited, Disc, Points, MaxPoints, 0, XRight).
-points_calculation(Visited, Disc, Points, MaxPoints, Y, X):-
+    value(Visited, Disc, Points, MaxPoints, 0, XRight).
+value(Visited, Disc, Points, MaxPoints, Y, X):-
     get_element_matrix(Visited, Y, X, visited),
     Y1 is Y + 1,
-    points_calculation(Visited, Disc, Points, MaxPoints, Y1, X).
-points_calculation(Visited, Disc, Points, MaxPoints, Y, X):-
+    value(Visited, Disc, Points, MaxPoints, Y1, X).
+value(Visited, Disc, Points, MaxPoints, Y, X):-
     get_element_matrix(Visited, Y, X, Elem),
     Elem \= Disc,
     Y1 is Y + 1,
     replace_matrix(Y, X, visited, Visited, NewVisited),
-    points_calculation(NewVisited, Disc, Points, MaxPoints, Y1, X).
-points_calculation(Visited, Disc, Points, MaxPoints, Y, X):-
+    value(NewVisited, Disc, Points, MaxPoints, Y1, X).
+value(Visited, Disc, Points, MaxPoints, Y, X):-
     get_element_matrix(Visited, Y, X, Elem),
     Elem \= visited,
     YDown is Y + 1,
@@ -44,7 +44,7 @@ points_calculation(Visited, Disc, Points, MaxPoints, Y, X):-
     board_flood(FourthVisited, FinalVisited, Disc, LeftPoints, Y, XLeft),
     NewPoints is DownPoints + UpPoints + LeftPoints + RightPoints + 1,
     max_points(NewPoints, Points, NewMax),
-    points_calculation(FinalVisited, Disc, NewMax, MaxPoints, YDown, X).
+    value(FinalVisited, Disc, NewMax, MaxPoints, YDown, X).
 
 
 %! board_flood(+Board, -NewBoard,+CurrentDisc, -Points, +Y, +X)
@@ -91,4 +91,4 @@ max_points(_, MaxPoints, MaxPoints).
 % Board. Stores that value on PlayerPoints 
 get_player_points(Player, Board, PlayerPoints):-
 	select_piece(Player, PlayerDisc),
-	points_calculation(Board, PlayerDisc, PlayerPoints).
+	value(Board, PlayerDisc, PlayerPoints).

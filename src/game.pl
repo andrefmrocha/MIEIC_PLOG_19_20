@@ -63,9 +63,9 @@ start_game :-
 game_loop(Board, [Player, _], _, _, 2) :- 
 	write('\nGame Finished\n\n'),
 	display_game(Board, Player),
-	points_calculation(Board, wt, Points0),
+	value(Board, wt, Points0),
     write('Player 0 Points : '), write(Points0), nl,
-    points_calculation(Board, bl, Points1),
+    value(Board, bl, Points1),
     write('Player 1 Points : '), write(Points1), nl, !,
 	write('Press enter to continue...'), read_string(_).
 
