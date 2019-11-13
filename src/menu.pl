@@ -55,7 +55,6 @@ display_menu(Option) :-
 	llc, write_line(50, '═', cyan), lrc, nl,
 	read_menu(Option, main).
 
-% TODO: update
 %! display_bot_menu(+BotNumber, -Option)
 % Clears screen and draws menu like the one shown below
 % Allows the user to choose the Bot Level making it use a different algorithm (Random, Greedy or MinMax)
@@ -67,9 +66,11 @@ display_menu(Option) :-
 % ╟---------------------------------╢
 % ║                                 ║
 % ║                                 ║
-% ║          1: Random Bot          ║
-% ║          2: Greedy Bot          ║
-% ║          3: MinMax Bot          ║
+% ║          1: Very Easy           ║
+% ║          2.1: Easy              ║
+% ║          2.2: Normal            ║
+% ║          3.1: Hard              ║
+% ║          3.2: Very Hard         ║
 % ║          0: Back                ║
 % ║                                 ║
 % ║                                 ║
