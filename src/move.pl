@@ -105,13 +105,13 @@ next_player([PrevPlayer, bot], [Player, bot], bvb, B1D - B2D, B2D - B1D) :-
 	ProvPlayer is PrevPlayer + 1,
 	Player is mod(ProvPlayer, 2).
 
-%! push(+FinalIndex, +Board, -NewBoard)
+%! push(+FinalIndex, +Row, -NewRow)
 % Attempts to actually push the given Board position.
 push(Index, [H | Tail], Solution) :- 
 	push_helper(Index, Tail, Solution, H).
 
 
-%! push_helper(+FinalIndex, BoardTail, NewBoardTail, H).
+%! push_helper(+FinalIndex, RowTail, NewRowTail, H).
 % Helper predicate for push predicate.
 push_helper(0, Sol, [H | Sol], H) :- !.
 

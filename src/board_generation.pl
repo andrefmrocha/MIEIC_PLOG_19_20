@@ -78,7 +78,7 @@ initialize_board([Line | TBoard], FinalBoard):-
 	length([Line | TBoard], NRows),
 	length(Line, NColumns),
 	NPieces is (NColumns + NRows - 4) * 2,
-    generate_pieces(_, Pieces, NPieces),
+    generate_pieces([], Pieces, NPieces),
 	generate_board([Line | TBoard], FinalBoard, Pieces).
 
 %! generate_board(+EmptyBoard, -InitializedBoard, +PiecesList)
@@ -107,70 +107,93 @@ generate_line([corner | TORow], [corner | TFRow], Pieces, NewPieces) :-
 	generate_line(TORow, TFRow, Pieces, NewPieces).
 
 
-% TODO: ! para cortar varias soluções
-% TODO: refactor
-%! generate_pieces()
-generate_pieces(PiecesList, PiecesList, 0).
 
+%! generate_pieces(+Acc, -PiecesList, +NumPieces)
+% Generates a list of Pieces of length NumPieces 
+% on PiecesList which complies with the rules of
+% the game. Uses Acc as accumulator along
+% the recursive calls.
+
+% Case 1: The list is completed
+generate_pieces(PiecesList, PiecesList, 0):- !.
+
+% Case 2: Beggining of accumulation of pieces
 generate_pieces([], PiecesList, NumPieces):-
     random_between(0, 1, Random),
     select_piece(Random, Piece),
     Num is NumPieces - 1,
     generate_pieces([Piece], PiecesList, Num).
+
+% Case 3: Second insertion on list 
 generate_pieces([H | []], PiecesList, NumPieces):-
     random_between(0, 1, Random),
     select_piece(Random, Piece),
     Num is NumPieces - 1,
-    append([Piece], [H], NewPiecesList),
-    generate_pieces(NewPiecesList, PiecesList, Num).
+    generate_pieces([Piece, H], PiecesList, Num).
 
+% Case 4: Last insertion with two black pieces, 
+% checking circularly if there's pairing
 generate_pieces([bl, bl | _], _, 1):-
 	second_last(List, wt),
 	last(List, wt),			!,
 	fail.
 
+% Case 5: Last insertion with a bl piece,
+% checking circularly if there are two
+% white pieces at the beggining
 generate_pieces(List, PiecesList, 1):-
 	second_last(List, wt),
 	last(List, wt),	
-    append([bl], List, NewPiecesList),
-    generate_pieces(NewPiecesList, PiecesList, 0).
+    generate_pieces([bl | List], PiecesList, 0).
 	
+% Case 6: Last insertion with two white pieces, 
+% checking circularly if there's no pairing
 generate_pieces([wt, wt | _], _, 1):-
 	second_last(List, bl),
 	last(List, bl), 		!,
 	fail.
 
+% Case 7: Last insertion with a wt piece,
+% checking circularly if there are two
+% black pieces at the beggining
 generate_pieces(List, PiecesList, 1):-
 	second_last(List, bl),
 	last(List, bl),
-    append([wt], List, NewPiecesList),
-    generate_pieces(NewPiecesList, PiecesList, 0).
+    generate_pieces([wt | List], PiecesList, 0).
 
+% Case 7: Last insertion of a black piece,
+% knowing that there's a wt piece at the end 
+% of the list
 generate_pieces([wt | T], PiecesList, 1):-
 	last([wt | T], wt),
-    append([bl], [wt | T], NewPiecesList),
-    generate_pieces(NewPiecesList, PiecesList, 0).
+    generate_pieces([bl, wt | T], PiecesList, 0).
 	
+% Case 7: Last insertion of a white piece,
+% knowing that there's a bl piece at the end 
+% of the list
 generate_pieces([bl | T], PiecesList, 1):-
 	last([bl | T], bl),
-    append([wt], [bl | T], NewPiecesList),
-    generate_pieces(NewPiecesList, PiecesList, 0).
+    generate_pieces([wt, bl | T], PiecesList, 0).
 
+% Case 8: Inserting a bl piece knowing that the 
+% last two pieces were whites
 generate_pieces([wt, wt | T], PiecesList, NumPieces):-
     Num is NumPieces - 1,
-    append([bl], [wt | [wt | T]], NewPiecesList),
-    generate_pieces(NewPiecesList, PiecesList, Num).
+    generate_pieces([bl, wt, wt | T], PiecesList, Num).
+
+% Case 9: Inserting a wt piece knowing that the 
+% last two pieces were black
 generate_pieces([bl, bl | T], PiecesList, NumPieces):-
     Num is NumPieces - 1,
-    append([wt], [bl| [bl | T]], NewPiecesList),
-    generate_pieces(NewPiecesList, PiecesList, Num).
+    generate_pieces([wt, bl, bl | T], PiecesList, Num).
+	
+% Case 10: Inserting a random piece in the board
 generate_pieces([H, H2 | T], PiecesList, NumPieces):-
 	repeat,
     random_between(0, 1, Random),
     select_piece(Random, Piece),
     Num is NumPieces - 1,
-    append([Piece], [H | [H2 | T]], NewPiecesList),
-    generate_pieces(NewPiecesList, PiecesList, Num).
+    generate_pieces([Piece, H, H2 | T], PiecesList, Num).
 
 %! select_piece(?Player, ?PieceType)
 % Associates a Player number (0 or 1) to a Piece Type (wt or bl)
