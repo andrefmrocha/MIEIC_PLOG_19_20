@@ -297,34 +297,28 @@ minimax(Board, Player, Func, Move):-
 	Pred=..[Func, FirstDegreeMoves, PlayerPoints, OpponentPoints, Move],
 	Pred.
 
-%! choose_move(+Board, +[Player, PlayerType], -NewBoard, +Difficulty)
+%! choose_move(+Board, +[Player, PlayerType], -NewMove, +Difficulty)
 % Chooses a move to take according to its Player, and PlayerType,
-% storing in it in NewBoard. If Player is a bot, it will try to 
+% storing in it in NewMove. If Player is a bot, it will try to 
 % obtain the best move according to current Difficulty. 
-choose_move(Board, [Player, human], NewBoard, _):-
-	read_move(Move, Board),
-	move(Board, Move, NewBoard, Player).
+choose_move(Board, [_, human], Move, _):-
+	read_move(Move, Board).
 
-choose_move(Board, [Player, bot], NewBoard, 0 - _):-
-	random_move(Board, Player, [IC, IR]-[FC, FR]),
-	move(Board, [IC, IR, FC, FR], NewBoard, Player).
+choose_move(Board, [Player, bot], [IC, IR, FC, FR], 0 - _):-
+	random_move(Board, Player, [IC, IR]-[FC, FR]).
 
-choose_move(Board, [Player, bot], NewBoard, 1 - _):-
+choose_move(Board, [Player, bot], [IC, IR, FC, FR], 1 - _):-
 	NextPlayer is Player + 1,
 	Opponent is mod(NextPlayer, 2),
-	greedy_move(Player, Opponent, Board , [IC, IR]-[FC, FR]),
-	move(Board, [IC, IR, FC, FR], NewBoard, Player).
+	greedy_move(Player, Opponent, Board , [IC, IR]-[FC, FR]).
 
-choose_move(Board, [Player, bot], NewBoard, 2 - _):-
+choose_move(Board, [Player, bot], [IC, IR, FC, FR], 2 - _):-
 	NextPlayer is Player + 1,
 	Opponent is mod(NextPlayer, 2),
-	greedy_move(Player, Opponent, Board , [IC, IR]-[FC, FR]),
-	move(Board, [IC, IR, FC, FR], NewBoard, Player).
+	greedy_move(Player, Opponent, Board , [IC, IR]-[FC, FR]).
 
-choose_move(Board, [Player, bot], NewBoard, 3 - _):-
-	minimax(Board, Player , minimax_worst_play, [IC, IR]-[FC, FR]),
-	move(Board, [IC, IR, FC, FR], NewBoard, Player).
+choose_move(Board, [Player, bot], [IC, IR, FC, FR], 3 - _):-
+	minimax(Board, Player , minimax_worst_play, [IC, IR]-[FC, FR]).
 	
-choose_move(Board, [Player, bot], NewBoard, 4 - _):-
-	minimax(Board, Player , get_best_with_difference, [IC, IR]-[FC, FR]),
-	move(Board, [IC, IR, FC, FR], NewBoard, Player).
+choose_move(Board, [Player, bot], [IC, IR, FC, FR], 4 - _):-
+	minimax(Board, Player , get_best_with_difference, [IC, IR]-[FC, FR]).

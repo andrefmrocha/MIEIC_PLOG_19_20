@@ -78,7 +78,8 @@ game_loop(Board, [Player, _], _, _, 2) :-
 game_loop(Board, [Player, Type], GameMode, Difficulty, _) :-
 	\+ pass_move(Board, Player),
 	display_game(Board, Player),
-	choose_move(Board, [Player, Type], NewBoard, Difficulty), !,
+	choose_move(Board, [Player, Type], Move, Difficulty),
+	move(Board, Move, NewBoard, Player), !,
 	next_player([Player, Type], NextPlayer, GameMode, Difficulty, NewDifficulty),
 	game_loop(NewBoard, NextPlayer, GameMode, NewDifficulty, 0).
 
