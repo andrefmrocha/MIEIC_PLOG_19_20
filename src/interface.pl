@@ -148,3 +148,8 @@ parse_dimension(['e', 'x', 'i', 't'], _, _) :- write(' Exiting\n'), !, abort.
 
 % Case Invalid Input: shows error message warning the user about the minimum and maximum board sizes and calls @see read_dimension
 parse_dimension(_, Output, Dimension) :- format(' ~s must be an integer between 0 and 8~n', [Dimension]), !, read_dimension(Output, Dimension).
+
+stop_and_wait(bvb):-
+	write('Press Enter to continue...'),
+	read_string(_).
+stop_and_wait(_).
