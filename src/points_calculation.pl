@@ -48,7 +48,7 @@ value(Visited, Disc, Points, MaxPoints, Y, X):-
 
 
 %! board_flood(+Board, -NewBoard,+CurrentDisc, -Points, +Y, +X)
-% Implements a flooding algoritm to calculate the nearby discs 
+% Implements a flood fill algoritm to calculate the nearby discs 
 % the same type as CurrentDisc.
 % @param Board must be a list of lists
 board_flood(Visited, Visited, _, Points, Y, X):-
