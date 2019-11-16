@@ -138,7 +138,7 @@ read_dimension(Output, Dimension):-
 % between 0 (minimum board size) and 8 (maximum board size)
 parse_dimension([Input], Output, _) :-
 	atom_number(Input, Output),
-	Output > 0, Output < 8, !.
+	Output > 0, Output < 7, !.
 
 % Case Enter: If only enter was pressed the input is empty and @see read_dimension is called again
 parse_dimension([], Output, Dimension) :- !, read_dimension(Output, Dimension).
@@ -147,7 +147,7 @@ parse_dimension([], Output, Dimension) :- !, read_dimension(Output, Dimension).
 parse_dimension(['e', 'x', 'i', 't'], _, _) :- write(' Exiting\n'), !, abort.
 
 % Case Invalid Input: shows error message warning the user about the minimum and maximum board sizes and calls @see read_dimension
-parse_dimension(_, Output, Dimension) :- format(' ~s must be an integer between 0 and 8~n', [Dimension]), !, read_dimension(Output, Dimension).
+parse_dimension(_, Output, Dimension) :- format(' ~s must be an integer between 0 and 7~n', [Dimension]), !, read_dimension(Output, Dimension).
 
 stop_and_wait(bvb):-
 	write('Press Enter to continue...'),

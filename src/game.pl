@@ -99,3 +99,12 @@ game_loop(Board, [Player, Type], GameMode, Difficulty, Passes) :-
 	game_loop(Board, NextPlayer, GameMode, NewDifficulty, NewPasses).
 
 
+%! game_over(+Board, +Player, +Opponent)
+% Determines if a game has ended or not by checking if both player
+% still have any moves to play.
+% This predicate is purely used to exemplify
+% this behavior for the report, therefore never actully 
+% being used in the code.
+game_over(Board, Player, Opponent):-
+	valid_moves(Board, Player, []),
+	valid_moves(Board, Opponent, []).
