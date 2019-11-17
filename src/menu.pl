@@ -260,3 +260,69 @@ display_instructions :-
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
 	vdiv, write_center(50, '', ' ', white), vdiv, nl,
 	llc, write_line(50, '═', cyan), lrc, nl.
+
+%! display_winner(+Points0, +Points1, +GameMode, +DifficultyTuple)
+% Displays the Game Winner like shown below
+% Waits for user to press ENTER to return to the main menu
+% Uses @see display_bottom_part_winner(+Points0, +Points1) to display bottom part
+% ╔═════════════════════════════════╗
+% ║                                 ║
+% ║        WIINER: PLAYER 1         ║
+% ║                                 ║
+% ╟---------------------------------╢
+% ║                                 ║
+% ║                                 ║
+% ║           Player 0: 4           ║
+% ║           Player 1: 6           ║
+% ║                                 ║
+% ║                                 ║
+% ╚═════════════════════════════════╝
+%
+display_winner(Points0, Points1) :-
+	Points0 > Points1,
+	ulc, write_line(50, '═', cyan), urc, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, 'WINNER: PLAYER 0', ' ', green), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	tr_oneline, write_line(50, '-', black), tl_oneline, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	display_bottom_part_winner(Points0, Points1).
+
+
+display_winner(Points0, Points1) :-
+	Points0 < Points1,
+	ulc, write_line(50, '═', cyan), urc, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, 'WINNER: PLAYER 1', ' ', green), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	tr_oneline, write_line(50, '-', black), tl_oneline, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	display_bottom_part_winner(Points0, Points1).
+
+
+display_winner(Points0, Points1) :-
+	ulc, write_line(50, '═', cyan), urc, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	vdiv, write_center(50, 'DRAW', ' ', blue), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	tr_oneline, write_line(50, '-', black), tl_oneline, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	display_bottom_part_winner(Points0, Points1).
+	
+%! display_bottom_part_winner(+Points0, +Points1)
+% Prints bottom part of the Game Winner display like shown below
+% ║                                 ║
+% ║           Player 0: 4           ║
+% ║           Player 1: 6           ║
+% ║                                 ║
+% ║                                 ║
+% ╚═════════════════════════════════╝
+display_bottom_part_winner(Points0, Points1) :-
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	format(atom(Pontuation0), 'Player 0: ~d', [Points0]),
+	format(atom(Pontuation1), 'Player 1: ~d', [Points1]),
+	vdiv, write_center(50, Pontuation0, ' ', white), vdiv, nl,
+	vdiv, write_center(50, Pontuation1, ' ', white), vdiv, nl,
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,	
+	vdiv, write_center(50, '', ' ', white), vdiv, nl,
+	llc, write_line(50, '═', cyan), lrc, nl.
