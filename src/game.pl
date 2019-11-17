@@ -8,9 +8,9 @@
 % Orders the Difficulty tuple depending on who begins the game
 % int the human vs bot game mode
 % Case human: If the FirstPlayer is the human, then the tuple will have the BotDifficulty on the right side
-order_difficulty(human, Difficulty, _ - Difficulty).
+order_difficulty(human, Difficulty, 999 - Difficulty).
 % Case bot: If the FirstPlayer is the bot, then the tuple will have the BotDifficulty on the left side
-order_difficulty(bot, Difficulty, Difficulty - _).
+order_difficulty(bot, Difficulty, Difficulty - 999).
 
 %! init_game(+GameMode, -DifficultyTuple, -FirstPlayer)
 % Function that given a Game Mode returns the difficulty in a tuple (DifficultyTuple) and
@@ -51,19 +51,6 @@ play:-
 start_game :-
 	menu_option(main).
 
-%! congratulate(+Points0, +Points1)
-% Displays a congratulations message depending on who has won
-% the game.
-% @param Points0 - points of Player 0
-% @param Points1 - points of Player 1
-congratulate(Points, Points):-
-	write('It\'s a tie!'), nl.
-congratulate(Points0, Points1):-
-	Points0 > Points1,
-	write('Player 0 has won! Congratulations!'), nl.
-congratulate(_, _):-
-	write('Player 1 has won! Congratulations!'), nl.
-
 
 % finish
 %! game_loop(+Board, +PlayerType, +GameMode, +DifficultyTuple, +NumberOfPasses)
@@ -78,10 +65,8 @@ game_loop(Board, [Player, _], _, _, 2) :-
 	write('\nGame Finished\n\n'),
 	display_game(Board, Player),
 	value(Board, wt, Points0),
-    write('Player 0 Points : '), write(Points0), nl,
     value(Board, bl, Points1),
-    write('Player 1 Points : '), write(Points1), nl, !,
-	congratulate(Points0, Points1),
+	display_winner(Points0, Points1),
 	write('Press enter to continue...'), read_string(_).
 
 % Case HasValidMoves:
