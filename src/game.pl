@@ -51,6 +51,20 @@ play:-
 start_game :-
 	menu_option(main).
 
+%! congratulate(+Points0, +Points1)
+% Displays a congratulations message depending on who has won
+% the game.
+% @param Points0 - points of Player 0
+% @param Points1 - points of Player 1
+congratulate(Points, Points):-
+	write('It\'s a tie!'), nl.
+congratulate(Points0, Points1):-
+	Points0 > Points1,
+	write('Player 0 has won! Congratulations!'), nl.
+congratulate(_, _):-
+	write('Player 1 has won! Congratulations!'), nl.
+
+
 % finish
 %! game_loop(+Board, +PlayerType, +GameMode, +DifficultyTuple, +NumberOfPasses)
 % This is the main game loop
@@ -67,6 +81,7 @@ game_loop(Board, [Player, _], _, _, 2) :-
     write('Player 0 Points : '), write(Points0), nl,
     value(Board, bl, Points1),
     write('Player 1 Points : '), write(Points1), nl, !,
+	congratulate(Points0, Points1),
 	write('Press enter to continue...'), read_string(_).
 
 % Case HasValidMoves:
