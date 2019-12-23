@@ -1,5 +1,6 @@
 :-use_module(library(lists)).
 :-use_module(library(clpfd)).
+:-use_module(library(random)).
 :-ensure_loaded('boards.pl').
 
 % C is represented by 1, F is represented by 2
@@ -34,4 +35,39 @@ close_or_far(Board):-
     maplist(restrict, Board),
     transpose(Board, TransposedBoard),
     maplist(restrict, TransposedBoard),
+    maplist(labeling([]), Board).
+
+mappable_length(Length, List):-
+    length(List, Length).
+
+
+select_pieces(FinishedRow, Row):-
+    domain(Row, 0, 2),
+    length(Row, LineLength),
+    NumZeroes is LineLength - 1,
+    global_cardinality(Row, [0-NumZeroes, 1-CCount, 2-FCount]),
+    CCount+FCount #= 1,
+    (CCount #= 1) #<=> CloseFound,
+    place_piece(CloseFound, FinishedRow, Row).
+
+place_piece(1, FinishedRow, Row):-
+    element(Index, Row, 1),
+    element(Index, FinishedRow, 1).
+
+place_piece(0, FinishedRow, Row):-
+    element(Index, Row, 2),
+    element(Index, FinishedRow, 2).
+
+generate(Rows, Columns, Board):-
+    length(FinishedBoard, Rows),
+    maplist(mappable_length(Columns), FinishedBoard),
+    close_or_far(FinishedBoard),
+    length(Board, Rows),
+    maplist(mappable_length(Columns), Board),
+    close_or_far(FinishedBoard),
+    maplist(select_pieces, FinishedBoard, Board),
+    transpose(FinishedBoard, TransposedFinishedBoard),
+    transpose(Board, TransposedBoard),
+    maplist(select_pieces, FinishedBoard, Board),
+    maplist(select_pieces, TransposedFinishedBoard, TransposedBoard),
     maplist(labeling([]), Board).
