@@ -70,4 +70,10 @@ generate(Rows, Columns, Board):-
     transpose(Board, TransposedBoard),
     maplist(select_pieces, FinishedBoard, Board),
     maplist(select_pieces, TransposedFinishedBoard, TransposedBoard),
-    maplist(labeling([]), Board).
+    maplist(labeling([value(sel_random)]), Board).
+
+sel_random(Var, _, BB0, BB1):-
+    fd_set(Var, Set), fdset_to_list(Set, List),
+    random_member(Value, List),
+    ( first_bound(BB0, BB1), Var#= Value;
+    later_bound(BB0, BB1), Var#\= Value ).
