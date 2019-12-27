@@ -2,6 +2,7 @@
 :-use_module(library(clpfd)).
 :-use_module(library(random)).
 :-ensure_loaded('boards.pl').
+:-ensure_loaded('display.pl').
 
 % C is represented by 1, F is represented by 2
 
