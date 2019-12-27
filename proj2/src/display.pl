@@ -1,5 +1,3 @@
-
-
 :-ensure_loaded('board_pieces.pl').
 
 outskirt_separator_helper([_ | []], _, End) :- hdiv, End, nl.
