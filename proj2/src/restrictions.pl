@@ -3,6 +3,7 @@
 :-use_module(library(random)).
 :-ensure_loaded('boards.pl').
 :-ensure_loaded('display.pl').
+:-ensure_loaded('statistics.pl').
 
 % C is represented by 1, F is represented by 2
 
@@ -66,6 +67,19 @@ close_or_far_geral(Board, Method) :-
     transpose(Board, TransposedBoard),
     maplist(Method, TransposedBoard),
     maplist(labeling([]), Board).
+
+
+close_or_far_stats(Board, Method) :-
+	% TODO: ver se aqui ou mais tarde
+	reset_timer,
+	maplist(Method, Board),
+    transpose(Board, TransposedBoard),
+    maplist(Method, TransposedBoard),
+	print_time('Posting Constraints: '),
+    maplist(labeling([]), Board),
+	print_time('Labeling Time: '),
+	fd_statistics,
+	statistics.
 
 mappable_length(Length, List):-
     length(List, Length).
