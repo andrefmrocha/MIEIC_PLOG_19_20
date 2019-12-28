@@ -96,8 +96,7 @@ generate(Rows, Columns, Board, Method):-
 	close_or_far_geral(FinishedBoard, Method),
     length(Board, Rows),
     maplist(mappable_length(Columns), Board),
-    %close_or_far(FinishedBoard),
-	close_or_far_geral(FinishedBoard, Method),
+
     maplist(select_pieces, FinishedBoard, Board),
     transpose(FinishedBoard, TransposedFinishedBoard),
     transpose(Board, TransposedBoard),
@@ -110,3 +109,74 @@ sel_random(Var, _, BB0, BB1):-
     random_member(Value, List),
     ( first_bound(BB0, BB1), Var#= Value;
     later_bound(BB0, BB1), Var#\= Value ).
+
+ntowers(Cols, Board) :-
+	length(Board, N),
+	length(Cols, N),
+	domain(Cols, 1, N),
+	all_distinct(Cols), % redundante mas diminui tempo
+	constrain(Cols, Board),
+	labeling([], Cols).
+
+constrain([], []).
+constrain([H|RCols], [Row | TBoard]):-
+	element(H, Row, Piece),
+	Piece #\= 0,
+	constrain(RCols, TBoard).
+
+
+% TODO: mudar para maplist??
+generate_board([], [], []).
+generate_board([Index | TCols], [FRow | FinishedBoard], [H | Board]) :-
+	element(Index, FRow, Element), % get element
+	element(Index, H, Element), % Place element
+	generate_board(TCols, FinishedBoard, Board).
+
+
+diff_signature([], [], []) :- !.
+diff_signature([B1|BT1], [B2|BT2], [S|Ss]) :-
+	S in 0..1,
+	B1 #= B2 #<=> S #= 0,
+	B1 #\= B2 #<=> S #= 1,
+	diff_signature(BT1, BT2, Ss).
+
+diffBoards(Board1, Board2) :-
+	diff_signature(Board1, Board2, Sign),
+	automaton(Sign,
+		[source(a), sink(b)],
+		[arc(a, 0, a), arc(a, 1, b), arc(b, 0, b), arc(b, 1, b)]).
+
+
+flatten([], []).
+flatten([H | T], FlattenB) :-
+	flatten(T, NewFlatten),
+	append(H, NewFlatten, FlattenB).
+
+two_solutions(FinishedBoard, Board) :-
+	flatten(Board, FlatBoard),
+	flatten(FinishedBoard, FlatFB),
+	
+	diffBoards(FlatFB, FlatBoard),
+
+	close_or_far_geral(Board, restrict2).
+
+
+generate2(Side, Cols):-
+    length(FinishedBoard, Side),
+    maplist(mappable_length(Side), FinishedBoard),
+	close_or_far_geral(FinishedBoard, restrict2),
+
+	ntowers(Cols, FinishedBoard),
+
+	% write(Cols), nl,
+
+    length(Board, Side),
+    maplist(mappable_length(Side), Board),
+
+	generate_board(Cols, FinishedBoard, Board),
+
+	\+ two_solutions(FinishedBoard, Board),
+	write(Board), nl.
+	
+
+% Tbm pode ser com findall resul length = 1
