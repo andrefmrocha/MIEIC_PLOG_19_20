@@ -89,20 +89,34 @@ place_piece(0, FinishedRow, Row):-
     element(Index, FinishedRow, 2).
 
 % generate(Rows, Columns, Board):-
-generate(Rows, Columns, Board, Method):-
-    length(FinishedBoard, Rows),
-    maplist(mappable_length(Columns), FinishedBoard),
+generate(Side, Cols, Unique):-
     %close_or_far(FinishedBoard),
-	close_or_far_geral(FinishedBoard, Method),
-    length(Board, Rows),
-    maplist(mappable_length(Columns), Board),
+    board_length(Side, FinishedBoard),
+	close_or_far_geral(FinishedBoard, restrict2),
 
-    maplist(select_pieces, FinishedBoard, Board),
-    transpose(FinishedBoard, TransposedFinishedBoard),
-    transpose(Board, TransposedBoard),
-    maplist(select_pieces, FinishedBoard, Board),
-    maplist(select_pieces, TransposedFinishedBoard, TransposedBoard),
-    maplist(labeling([value(sel_random)]), Board).
+    build_board(Side, Cols, FinishedBoard, Board),
+    unique(Unique, FinishedBoard, Board),
+	write(Board), nl.
+
+
+build_board(Side, Cols, FinishedBoard, Board):-
+	ntowers(Cols, FinishedBoard),
+
+	% write(Cols), nl,
+    board_length(Side, Board),
+
+	generate_board(Cols, FinishedBoard, Board).
+
+
+unique(unique, FinishedBoard, Board):-
+	\+ two_solutions(FinishedBoard, Board).
+unique(_, _, _).
+
+
+board_length(Side, Board):-
+    length(Board, Side),
+    maplist(mappable_length(Side), Board).
+
 
 sel_random(Var, _, BB0, BB1):-
     fd_set(Var, Set), fdset_to_list(Set, List),
@@ -161,22 +175,7 @@ two_solutions(FinishedBoard, Board) :-
 	close_or_far_geral(Board, restrict2).
 
 
-generate2(Side, Cols):-
-    length(FinishedBoard, Side),
-    maplist(mappable_length(Side), FinishedBoard),
-	close_or_far_geral(FinishedBoard, restrict2),
 
-	ntowers(Cols, FinishedBoard),
-
-	% write(Cols), nl,
-
-    length(Board, Side),
-    maplist(mappable_length(Side), Board),
-
-	generate_board(Cols, FinishedBoard, Board),
-
-	\+ two_solutions(FinishedBoard, Board),
-	write(Board), nl.
 	
 
 % Tbm pode ser com findall resul length = 1
