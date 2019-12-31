@@ -69,14 +69,14 @@ close_or_far_geral(Board, Method) :-
     maplist(labeling([]), Board).
 
 
-close_or_far_stats(Board, Method) :-
+close_or_far_stats(Board, Method, Labeling) :-
 	% TODO: ver se aqui ou mais tarde
 	reset_timer,
 	maplist(Method, Board),
     transpose(Board, TransposedBoard),
     maplist(Method, TransposedBoard),
 	print_time('Posting Constraints: '),
-    maplist(labeling([]), Board),
+    maplist(labeling(Labeling), Board),
 	print_time('Labeling Time: '),
 	fd_statistics,
 	statistics.
@@ -111,6 +111,15 @@ generate(Side, Cols, Unique):-
     build_board(Side, Cols, FinishedBoard, Board),
     unique(Unique, FinishedBoard, Board),
 	write(Board), nl.
+
+generate_stats(Cols, Unique, Labeling, Side):-
+	write('Value: '), write(Side), nl,
+    %close_or_far(FinishedBoard),
+    board_length(Side, FinishedBoard),
+	close_or_far_stats(FinishedBoard, restrict2, Labeling),
+
+    build_board(Side, Cols, FinishedBoard, Board),
+    unique(Unique, FinishedBoard, Board).
 
 
 build_board(Side, Cols, FinishedBoard, Board):-
