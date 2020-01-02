@@ -66,17 +66,19 @@ close_or_far_geral(Board, Method) :-
 	maplist(Method, Board),
     transpose(Board, TransposedBoard),
     maplist(Method, TransposedBoard),
-    maplist(labeling([]), Board).
+	flatten(Board, FlatBoard),
+	labeling([], FlatBoard).
 
 
-close_or_far_stats(Board, Method, Labeling) :-
+close_or_far_stats(Board, Method, Labeling, Flag) :-
 	% TODO: ver se aqui ou mais tarde
 	reset_timer,
 	maplist(Method, Board),
     transpose(Board, TransposedBoard),
     maplist(Method, TransposedBoard),
 	print_time, write(','),
-    maplist(labeling(Labeling), Board),
+	flatten(Board, FlatBoard),
+	labeling([time_out(60000, Flag) | Labeling], FlatBoard),
 	print_time, nl.
 
 mappable_length(Length, List):-
@@ -110,15 +112,17 @@ generate(Side, Cols, Unique):-
     unique(Unique, FinishedBoard, Board),
 	write(Board), nl.
 
-generate_stats(Cols, Unique, Labeling, Side):-
+generate_stats(Cols, Unique, Labeling, Side, Flag):-
 	write(Side), write(','),
     %close_or_far(FinishedBoard),
     board_length(Side, FinishedBoard),
-	close_or_far_stats(FinishedBoard, restrict2, Labeling),
+	close_or_far_stats(FinishedBoard, restrict2, Labeling, Flag),
+	generate_on_flag(Side, Cols, Unique, FinishedBoard, _, Flag).
 
+generate_on_flag(_, _, _, _, _, time_out).
+generate_on_flag(Side, Cols, Unique, FinishedBoard, Board, _):-
     build_board(Side, Cols, FinishedBoard, Board),
     unique(Unique, FinishedBoard, Board).
-
 
 build_board(Side, Cols, FinishedBoard, Board):-
 	ntowers(Cols, FinishedBoard),

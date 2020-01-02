@@ -26,19 +26,20 @@ make_exclusive_combs(List, Combination):-
 	combs(List, Combination),
 	restrict_bisect(Combination).
 
-test_generate(Min, Max, _):- 
+test_generate(_, _, _, time_out). 
+test_generate(Min, Max, _, _):- 
 	Min >= Max,
 	nl, nl.
-test_generate(Min, Max, Combination):-
-	generate_stats(_, no, Combination, Min),
+test_generate(Min, Max, Combination, _):-
+	generate_stats(_, no, Combination, Min, NewFlag),
 	NewMin is Min + 5,
-	test_generate(NewMin, Max, Combination).
+	test_generate(NewMin, Max, Combination, NewFlag).
 
 test(Min, Max, Combination):-
 	write('Statistics for: '),
 	write(Combination), nl,
 	write('Board Size, Posting Constraints, Labeling Time'), nl,
-	test_generate(Min, Max, Combination).
+	test_generate(Min, Max, Combination, success).
 
 
 run_statistics(Min, Max):-
