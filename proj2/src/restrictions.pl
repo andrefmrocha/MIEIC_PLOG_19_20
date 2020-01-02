@@ -75,11 +75,9 @@ close_or_far_stats(Board, Method, Labeling) :-
 	maplist(Method, Board),
     transpose(Board, TransposedBoard),
     maplist(Method, TransposedBoard),
-	print_time('Posting Constraints: '),
+	print_time, write(','),
     maplist(labeling(Labeling), Board),
-	print_time('Labeling Time: '),
-	fd_statistics,
-	statistics.
+	print_time, nl.
 
 mappable_length(Length, List):-
     length(List, Length).
@@ -113,7 +111,7 @@ generate(Side, Cols, Unique):-
 	write(Board), nl.
 
 generate_stats(Cols, Unique, Labeling, Side):-
-	write('Value: '), write(Side), nl,
+	write(Side), write(','),
     %close_or_far(FinishedBoard),
     board_length(Side, FinishedBoard),
 	close_or_far_stats(FinishedBoard, restrict2, Labeling),
