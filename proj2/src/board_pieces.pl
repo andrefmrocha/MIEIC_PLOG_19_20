@@ -14,6 +14,9 @@ tl :- put_code(9515). % ┫ : T left
 td :- put_code(9523). % ┳ : T down
 tu :- put_code(9531). % ┻ : T up
 
+
+%! display_element(+Element)
+% Transforms the board element into the corresponding letter
 display_element(0) :- write('   ').
 display_element(1) :- write(' C ').
 display_element(2) :- write(' F ').

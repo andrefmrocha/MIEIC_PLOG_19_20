@@ -1,3 +1,6 @@
+% Various size puzzle boards to test the program
+% Boards copied from: https://www2.stetson.edu/~efriedma/puzzle/closefar/
+
 board_1([[_, _, _, 2, _, _, _],
          [_, _, _, _, _, _, 2],
          [_, _, _, _, _, 1, _], 
