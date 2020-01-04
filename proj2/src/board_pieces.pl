@@ -17,9 +17,11 @@ tu :- put_code(9531). % ┻ : T up
 
 %! display_element(+Element)
 % Transforms the board element into the corresponding letter
+% Prints empty space if the variable is empty
+display_element(H) :- var(H), write('   ').
 % Prints C in case of 1
 display_element(1) :- write(' C ').
 % Writes F in case of 2
 display_element(2) :- write(' F ').
-% and empty space otherwise (0 or _)
-display_element(_) :- write('   ').
+% Prints spaec if the element is 0
+display_element(0) :- write('   ').
