@@ -2,6 +2,7 @@
 :-use_module(library(clpfd)).
 :-use_module(library(random)).
 :-ensure_loaded('boards.pl').
+:-ensure_loaded('statistics.pl').
 :-ensure_loaded('display.pl').
 :-ensure_loaded('utils.pl').
 
@@ -79,8 +80,20 @@ close_or_far_geral(Board, Method) :-
 	maplist(Method, Board),
     transpose(Board, TransposedBoard),
     maplist(Method, TransposedBoard),
-	% TODO: não esquecer de mudar isto para como esta no stats (flatten)
-    maplist(labeling([]), Board).
+	flatten(Board, FlatBoard),
+	labeling([], FlatBoard).
+
+
+close_or_far_stats(Board, Method, Labeling, Flag) :-
+	% TODO: ver se aqui ou mais tarde
+	reset_timer,
+	maplist(Method, Board),
+    transpose(Board, TransposedBoard),
+    maplist(Method, TransposedBoard),
+	print_time, write(','),
+	flatten(Board, FlatBoard),
+	labeling([time_out(60000, Flag) | Labeling], FlatBoard),
+	print_time, nl.
 
 
 % TODO: ver se é para apagar
@@ -112,9 +125,6 @@ place_piece(0, FinishedRow, Row):-
 % making an empty square matrix with the desired Side size using @see board_length
 % To build the final puzzle, @see build_board is called
 % Finally there is a generate and test approach to the uniqueness solution problem by calling @see unique
-
-% TODO: será que ainda queremos fazer com Row != column??
-% TODO: ver o q sai, se calhar Cols n é o que faz mais sentido. Pode ser preciso reescrever a linha começada por Cols
 generate(Side, Cols, Unique):-
     board_length(Side, FinishedBoard),
 	close_or_far_geral(FinishedBoard, restrict2),
@@ -122,14 +132,25 @@ generate(Side, Cols, Unique):-
     unique(Unique, FinishedBoard, Board),
 	write(Board), nl.
 
+generate_stats(Cols, Unique, Labeling, Side, Flag):-
+	write(Side), write(','),
+    %close_or_far(FinishedBoard),
+    board_length(Side, FinishedBoard),
+	close_or_far_stats(FinishedBoard, restrict2, Labeling, Flag),
+	generate_on_flag(Side, Cols, Unique, FinishedBoard, _, Flag).
+
+generate_on_flag(_, _, _, _, _, time_out).
+generate_on_flag(Side, Cols, Unique, FinishedBoard, Board, _):-
+    build_board(Side, Cols, FinishedBoard, Board),
+    unique(Unique, FinishedBoard, Board).
+
+% TODO: eu tbm tiraria o Cols daqui já que no outro TODO digo que ele já n é necessário para mostrar
 %! build_board(+Side, -Cols, +FinishedBoard, -Board)
 % Generates a puzzle with one hint by column and row and returns it to the Board parameter
 % The Cols return parameter indicates where each hint is by specifing the column index in each row of the list
 % @see ntowers initializes the Cols list with the correct indexes and, 
 % after initializing an empty puzzle with @see board_length, the final puzzle is generated with
 % @see generate_board
-
-% TODO: eu tbm tiraria o Cols daqui já que no outro TODO digo que ele já n é necessário para mostrar
 build_board(Side, Cols, FinishedBoard, Board):-
 	ntowers(Cols, FinishedBoard),
     board_length(Side, Board),
@@ -183,8 +204,6 @@ constrain([H|RCols], [Row | TBoard]):-
 % Goes through each element of Cols and inserts the corresponding FinishedBoard
 % element into the HintBoard.
 % Each element of Cols corresponds to the index of the column in that row
-
-% TODO: ver se não dá para mudar com um maplist/3
 generate_board([], [], []).
 generate_board([Index | TCols], [FRow | FinishedBoard], [H | Board]) :-
 	element(Index, FRow, Element), % get element
@@ -220,9 +239,3 @@ two_solutions(FinishedBoard, Board) :-
 	flatten(FinishedBoard, FlatFB),
 	diffBoards(FlatFB, FlatBoard),
 	close_or_far_geral(Board, restrict2).
-
-
-
-	
-
-% Tbm pode ser com findall resul length = 1
