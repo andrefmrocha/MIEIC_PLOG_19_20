@@ -146,7 +146,13 @@ generate_on_flag(Side, Cols, Unique, FinishedBoard, Board, _):-
 build_board(Side, Cols, FinishedBoard, Board):-
 	ntowers(Cols, FinishedBoard),
     board_length(Side, Board),
-	generate_board(Cols, FinishedBoard, Board).
+	generate_board(Cols, FinishedBoard, Board),
+	open('generated_boards.pl', append, Stream),
+	write(Stream, board), write(Stream, '_'), 
+	write(Stream, Side), write(Stream, '('),
+	write(Stream, Board), write(Stream,')'), 
+	write(Stream, '.\n'), 
+	close(Stream).
 
 %! unique(+Method, +FinishedBoard, +Board).
 % Predicate that ensures the uniqueness of the solution
