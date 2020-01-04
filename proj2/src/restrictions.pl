@@ -83,9 +83,13 @@ close_or_far_geral(Board, Method) :-
 	flatten(Board, FlatBoard),
 	labeling([], FlatBoard).
 
-
+%! close_or_far_stats(+Board, +Method, +Labeling, -Flag).
+% This predicate has the exact same ability as @see close_or_far_geral
+% being that it also adds the ability to statistically infer information 
+% the execution of the solver. 
+% @param Labeling: List of labeling options
+% @param Flag: Is unified with success when it completes or time_out when it does not
 close_or_far_stats(Board, Method, Labeling, Flag) :-
-	% TODO: ver se aqui ou mais tarde
 	reset_timer,
 	maplist(Method, Board),
     transpose(Board, TransposedBoard),
@@ -95,25 +99,6 @@ close_or_far_stats(Board, Method, Labeling, Flag) :-
 	labeling([time_out(60000, Flag) | Labeling], FlatBoard),
 	print_time, nl.
 
-
-% TODO: ver se é para apagar
-select_pieces(FinishedRow, Row):-
-    domain(Row, 0, 2),
-    length(Row, LineLength),
-    NumZeroes is LineLength - 1,
-    global_cardinality(Row, [0-NumZeroes, 1-CCount, 2-FCount]),
-    CCount+FCount #= 1,
-    (CCount #= 1) #<=> CloseFound,
-    place_piece(CloseFound, FinishedRow, Row).
-
-% TODO: ver se é para apagar
-place_piece(1, FinishedRow, Row):-
-    element(Index, Row, 1),
-    element(Index, FinishedRow, 1).
-% TODO: ver se é para apagar
-place_piece(0, FinishedRow, Row):-
-    element(Index, Row, 2),
-    element(Index, FinishedRow, 2).
 
 %! generate(+Side, -Cols, +Unique).
 % Predicate that helps to generate a random puzzle board with the desired Size
@@ -132,13 +117,20 @@ generate(Side, Cols, Unique):-
     unique(Unique, FinishedBoard, Board),
 	write(Board), nl.
 
+%! generate(-Cols, +Unique, +Labeling, +Side, -Flag).
+% Similarly to @close_or_far_stats, it provides an interface to be able to call the statistical module
+% of the solver.
+% @param Labeling: List of labeling options
+% @param Flag: Is unified with success when it completes or time_out when it does not
 generate_stats(Cols, Unique, Labeling, Side, Flag):-
 	write(Side), write(','),
-    %close_or_far(FinishedBoard),
     board_length(Side, FinishedBoard),
 	close_or_far_stats(FinishedBoard, restrict2, Labeling, Flag),
 	generate_on_flag(Side, Cols, Unique, FinishedBoard, _, Flag).
 
+% generate_on_flag(+Side, +Cols, +Unique, +FinishedBoard, -Board, +Flag).
+% Determines if there was a timeout during labeling, since this means
+% this is not fit to build a new board.
 generate_on_flag(_, _, _, _, _, time_out).
 generate_on_flag(Side, Cols, Unique, FinishedBoard, Board, _):-
     build_board(Side, Cols, FinishedBoard, Board),
@@ -169,12 +161,6 @@ unique(unique2, _, Board):-
 	findall(_, close_or_far_geral(Board, restrict2), List).
 unique(_, _, _).
 
-% TODO: ver se não é para apagar
-sel_random(Var, _, BB0, BB1):-
-    fd_set(Var, Set), fdset_to_list(Set, List),
-    random_member(Value, List),
-    ( first_bound(BB0, BB1), Var#= Value;
-    later_bound(BB0, BB1), Var#\= Value ).
 
 %! ntowers(-Cols, +Board)
 % Inspired on the famous Queens Problem, this predicate generates the final hints for the puzzle
