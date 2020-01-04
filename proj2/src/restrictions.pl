@@ -110,31 +110,43 @@ close_or_far_stats(Board, Method, Labeling, Flag) :-
 % making an empty square matrix with the desired Side size using @see board_length
 % To build the final puzzle, @see build_board is called
 % Finally there is a generate and test approach to the uniqueness solution problem by calling @see unique
-generate(Side, Cols, Unique):-
+% @param Name: Name of the generated predicate on generated_boards.pl
+generate(Side, Cols, Unique, Name):-
     board_length(Side, FinishedBoard),
 	close_or_far_geral(FinishedBoard, restrict2),
     build_board(Side, Cols, FinishedBoard, Board),
     unique(Unique, FinishedBoard, Board),
+	generate_predicate(Board, Name),
 	write(Board), nl.
 
-%! generate(-Cols, +Unique, +Labeling, +Side, -Flag).
+%! generate_stats(-Cols, +Unique, +Labeling, +Side, -Flag, +Name).
 % Similarly to @close_or_far_stats, it provides an interface to be able to call the statistical module
 % of the solver.
 % @param Labeling: List of labeling options
 % @param Flag: Is unified with success when it completes or time_out when it does not
-generate_stats(Cols, Unique, Labeling, Side, Flag):-
+% @param Name: Name of the generated predicate on generated_boards.pl
+generate_stats(Cols, Unique, Labeling, Side, Flag, Name):-
 	write(Side), write(','),
     board_length(Side, FinishedBoard),
 	close_or_far_stats(FinishedBoard, restrict2, Labeling, Flag),
-	generate_on_flag(Side, Cols, Unique, FinishedBoard, _, Flag).
+	generate_on_flag(Side, Cols, Unique, FinishedBoard, _, Flag, Name).
 
 % generate_on_flag(+Side, +Cols, +Unique, +FinishedBoard, -Board, +Flag).
 % Determines if there was a timeout during labeling, since this means
 % this is not fit to build a new board.
-generate_on_flag(_, _, _, _, _, time_out).
-generate_on_flag(Side, Cols, Unique, FinishedBoard, Board, _):-
+generate_on_flag(_, _, _, _, _, time_out, _).
+generate_on_flag(Side, Cols, Unique, FinishedBoard, Board, _, Name):-
     build_board(Side, Cols, FinishedBoard, Board),
-    unique(Unique, FinishedBoard, Board).
+    unique(Unique, FinishedBoard, Board),
+	generate_predicate(Board, Name).
+
+
+generate_predicate(Board, Name):-
+	open('generated_boards.pl', append, Stream),
+	write(Stream, Name), write(Stream, '('),
+	write(Stream, Board), write(Stream,')'), 
+	write(Stream, '.\n'), 
+	close(Stream).
 
 % TODO: eu tbm tiraria o Cols daqui já que no outro TODO digo que ele já n é necessário para mostrar
 %! build_board(+Side, -Cols, +FinishedBoard, -Board)
@@ -146,13 +158,7 @@ generate_on_flag(Side, Cols, Unique, FinishedBoard, Board, _):-
 build_board(Side, Cols, FinishedBoard, Board):-
 	ntowers(Cols, FinishedBoard),
     board_length(Side, Board),
-	generate_board(Cols, FinishedBoard, Board),
-	open('generated_boards.pl', append, Stream),
-	write(Stream, board), write(Stream, '_'), 
-	write(Stream, Side), write(Stream, '('),
-	write(Stream, Board), write(Stream,')'), 
-	write(Stream, '.\n'), 
-	close(Stream).
+	generate_board(Cols, FinishedBoard, Board).
 
 %! unique(+Method, +FinishedBoard, +Board).
 % Predicate that ensures the uniqueness of the solution
@@ -160,12 +166,14 @@ build_board(Side, Cols, FinishedBoard, Board):-
 % predicate or unique2 that uses findall and verifies if ther is only one solution
 % FinishedBoard is the solution from where the hint Board parameter is generated
 unique(unique1, FinishedBoard, Board):-
-	\+ two_solutions(FinishedBoard, Board).
+	\+two_solutions(FinishedBoard, Board).
 % TODO: testar se funciona
 unique(unique2, _, Board):-
 	length(List, 1),
 	findall(_, close_or_far_geral(Board, restrict2), List).
-unique(_, _, _).
+unique(Unique, _, _):-
+	Unique \= unique1,
+	Unique \= unique2.
 
 
 %! ntowers(-Cols, +Board)

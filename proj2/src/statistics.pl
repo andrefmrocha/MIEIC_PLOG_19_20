@@ -39,7 +39,7 @@ test_generate(Min, Max, _, _):-
 	Min >= Max,
 	nl, nl.
 test_generate(Min, Max, Combination, _):-
-	generate_stats(_, no, Combination, Min, NewFlag),
+	generate_stats(_, no, Combination, Min, NewFlag, _),
 	NewMin is Min + 5,
 	test_generate(NewMin, Max, Combination, NewFlag).
 
