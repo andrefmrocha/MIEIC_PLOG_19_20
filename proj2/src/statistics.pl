@@ -30,39 +30,42 @@ combinations([X, Y]):-
 	selection(Selection),
 	member(Y, Selection).
 
-% test_generate(-Min, +Max, +Combination, -Flag)
+% test_generate(-Min, +Max, +Combination, -Flag, +Method)
 % Generates statistical information regarding the given Combination.
 % Creates boards of Min size until Max size unless Flag 
 % ever becomes time_out, meaning it did not finish in due time.
-test_generate(_, _, _, time_out). 
-test_generate(Min, Max, _, _):- 
+% @param Method - either restrict or restrict2
+test_generate(_, _, _, time_out, _). 
+test_generate(Min, Max, _, _, _):- 
 	Min >= Max,
 	nl, nl.
-test_generate(Min, Max, Combination, _):-
-	generate_stats(_, no, Combination, Min, NewFlag, _),
+test_generate(Min, Max, Combination, _, Method):-
+	generate_stats(no, Combination, Min, NewFlag, _, Method),
 	NewMin is Min + 5,
-	test_generate(NewMin, Max, Combination, NewFlag).
+	test_generate(NewMin, Max, Combination, NewFlag, Method).
 
-% test(+Min, +Max, +Combination)
+% test(+Min, +Max, +Method, +Combination)
 % Predicate to write some initial information regarding the
 % the given Combination. Also prepares the columns names in 
 % a csv file. Tightly coupled to @see test_generat
-test(Min, Max, Combination):-
+% @param Method - either restrict or restrict2
+test(Min, Max, Method, Combination):-
 	write('Statistics for: '),
 	write(Combination), nl,
 	write('Board Size, Posting Constraints, Labeling Time'), nl,
-	test_generate(Min, Max, Combination, success).
+	test_generate(Min, Max, Combination, success, Method).
 
 
-% run_statistics(+Min, +Max).
+% run_statistics(+Min, +Max, +Method).
 % Generates statistical information regarding all the possible
 % combinations of the values given by @see order and @see selection.
 % It will generate all boards from size Min until Max, unless any of 
 % the given combinations cannot solve it in due time.
-run_statistics(Min, Max):-
+% @param Method - either restrict or restrict2
+run_statistics(Min, Max, Method):-
 	tell('stats.csv'),
 	findall(List, combinations(List), Combinations),
-	maplist(test(Min, Max), Combinations),
+	maplist(test(Min, Max, Method), Combinations),
 	told.
 
 % test_generate(+Values, +Combination).
